@@ -1,0 +1,19 @@
+{
+ "id": "x2",
+ "names": [
+  {
+   "value": "Enable HTTPS",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "https"
+   ]
+  }
+ ],
+ "active": false
+}

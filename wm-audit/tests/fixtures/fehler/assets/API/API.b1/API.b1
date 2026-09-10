@@ -1,0 +1,40 @@
+{
+ "id": "b1",
+ "apiName": "OffeneAPI",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Production",
+ "apiGroups": [
+  "Internal"
+ ],
+ "nativeEndpoint": [
+  {
+   "uri": "https://backend.example/v1",
+   "passSecurityHeaders": false,
+   "connectionTimeoutDuration": 0,
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-b1"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.0",
+  "info": {
+   "title": "OffeneAPI",
+   "version": "1.0"
+  },
+  "paths": {
+   "/items/{itemId}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

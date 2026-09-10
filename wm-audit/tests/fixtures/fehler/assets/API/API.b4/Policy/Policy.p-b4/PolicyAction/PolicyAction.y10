@@ -1,0 +1,20 @@
+{
+ "id": "y10",
+ "names": [
+  {
+   "value": "HTTP+HTTPS",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "http",
+    "https"
+   ]
+  }
+ ],
+ "active": false
+}

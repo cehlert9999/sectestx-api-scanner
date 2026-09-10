@@ -1,0 +1,19 @@
+{
+ "id": "x3",
+ "names": [
+  {
+   "value": "Traffic Limit",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttlingPolicy",
+ "parameters": [
+  {
+   "templateKey": "maxRequests",
+   "values": [
+    "1000"
+   ]
+  }
+ ],
+ "active": false
+}

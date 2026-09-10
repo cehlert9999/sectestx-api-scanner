@@ -1,0 +1,12 @@
+oas-audit
+Copyright 2026 Christian Ehlert
+
+Dieses Produkt enthält Software, die von Christian Ehlert entwickelt wurde.
+
+Teile dieses Codes wurden ursprünglich für sectestx entwickelt und unter der
+Apache-Lizenz 2.0 als Open Source veröffentlicht.
+
+Die Zuordnung der Prüfregeln zu den OWASP API Security Top 10 orientiert sich an
+der Veröffentlichung der OWASP Foundation (https://owasp.org/API-Security/),
+lizenziert unter CC BY-SA 4.0. Regeltexte und Implementierung sind eigenständig
+formuliert.

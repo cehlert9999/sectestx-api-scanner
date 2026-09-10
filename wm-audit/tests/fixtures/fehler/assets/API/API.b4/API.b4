@@ -1,0 +1,40 @@
+{
+ "id": "b4",
+ "apiName": "KlartextAPI",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Production",
+ "apiGroups": [
+  "Internal"
+ ],
+ "nativeEndpoint": [
+  {
+   "uri": "http://intern.example/v1",
+   "passSecurityHeaders": true,
+   "connectionTimeoutDuration": 0,
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-b4"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.0",
+  "info": {
+   "title": "KlartextAPI",
+   "version": "1.0"
+  },
+  "paths": {
+   "/items/{itemId}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

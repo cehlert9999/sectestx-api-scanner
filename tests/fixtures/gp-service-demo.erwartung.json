@@ -1,0 +1,33 @@
+{
+  "_comment": "Statische Vorhersagbarkeit der 22 dokumentierten Bugs der gp-service-demo (docs/vulnerabilities.json). certain: ein BELEGTER Befund muss die Operation nennen. candidate: irgendein Befund (auch Hinweis oder Aggregat) muss sie nennen. impossible: reines Laufzeitverhalten — es darf KEIN Befund behaupten, den Bug gefunden zu haben; stattdessen muss die Risikoklasse unter den Laufzeitluecken stehen.",
+  "spec": "gp-service-demo.json",
+  "bugs": [
+    {"id": "api5-legacy-v0", "static": "certain", "check": "endpoint.unauth_sensitive_response", "subject": "/api/v0/partners"},
+    {"id": "api8-debug-health", "static": "certain", "check": "endpoint.debug_path", "subject": "/debug/health"},
+    {"id": "api8-actuator-env", "static": "certain", "check": "endpoint.debug_path", "subject": "/actuator/env"},
+    {"id": "api2-gateway-or-auth", "static": "certain", "check": "spec.security_or_semantics", "subject": "/gateway/api/v1/partners"},
+    {"id": "api2-exp-bypass", "static": "certain", "check": "endpoint.unauth_id_read", "subject": "/api/v1/tariffs/{tariff_id}",
+     "note": "Der Scan findet etwas Staerkeres als den dokumentierten Bug (gar keine Auth statt fehlender Ablaufpruefung)."},
+
+    {"id": "api1-partner-cross-tenant", "static": "candidate", "check": "endpoint.object_level_access", "subject": "/api/v1/partners/{partner_id}"},
+    {"id": "api1-contract-cross-tenant", "static": "candidate", "check": "endpoint.object_level_access", "subject": "/api/v1/contracts/{contract_id}"},
+    {"id": "api1-partner-by-number", "static": "candidate", "check": "endpoint.object_level_access", "subject": "/api/v1/partners/by-number/{partner_number}"},
+    {"id": "api5-admin-stats", "static": "candidate", "check": "endpoint.admin_path", "subject": "GET /api/v1/admin/stats"},
+    {"id": "api5-admin-export", "static": "candidate", "check": "endpoint.admin_path", "subject": "GET /api/v1/admin/export/partners"},
+    {"id": "api5-tariff-mutation", "static": "candidate", "check": "endpoint.write_without_scope", "subject": "/api/v1/tariffs"},
+    {"id": "api3-mass-assignment-partner", "static": "candidate", "check": "schema.additional_properties_open", "subject": "/api/v1/partners"},
+
+    {"id": "api3-priv-esc-users-me", "static": "impossible", "gap": "mass_assignment",
+     "note": "Garantiertes False Negative: die Spec sagt additionalProperties: false, der Code ist verwundbar."},
+    {"id": "api2-jwt-alg-none", "static": "impossible", "gap": "jwt_algorithm"},
+    {"id": "api8-missing-headers", "static": "impossible", "gap": "security_headers"},
+    {"id": "api8-server-banner", "static": "impossible", "gap": "error_disclosure"},
+    {"id": "api8-cors-wildcard", "static": "impossible", "gap": "cors"},
+    {"id": "api8-stack-trace", "static": "impossible", "gap": "error_disclosure"},
+    {"id": "api8-swagger-public", "static": "impossible", "gap": "undocumented_endpoints"},
+    {"id": "api2-gateway-unverified-key", "static": "impossible", "gap": "api_key_verification"},
+    {"id": "api2-gateway-key-in-query", "static": "impossible", "gap": "api_key_verification",
+     "note": "Die Spec deklariert den Key im Header; dass der Server ihn auch aus dem Query nimmt, steht nicht im Dokument."},
+    {"id": "api2-gateway-trust-header", "static": "impossible", "gap": "trust_header"}
+  ]
+}

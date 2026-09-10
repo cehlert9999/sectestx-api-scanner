@@ -1,0 +1,2870 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "GP-Service Demo-API",
+  "description": "Absichtlich verwundbare Demo-API f\u00fcr den SecureAPI Tester. Energieversorger-Domain (Gesch\u00e4ftspartner, Vertr\u00e4ge, Tarife).",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/health": {
+   "get": {
+    "tags": [
+     "meta"
+    ],
+    "summary": "Health",
+    "description": "Liveness-Check f\u00fcr Container und Loadbalancer.",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "type": "object",
+         "title": "Response Health Health Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/login": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Login",
+    "operationId": "login_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TokenResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/partners": {
+   "get": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "List Partners",
+    "operationId": "list_partners_api_v1_partners_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/PartnerType"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Type"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/PartnerStatus"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerListResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Create Partner",
+    "description": "Anlegen eines Partners. Im vulnerable_mode anf\u00e4llig f\u00fcr Mass Assignment.",
+    "operationId": "create_partner_api_v1_partners_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "title": "PartnerCreate",
+        "required": [
+         "type",
+         "name"
+        ],
+        "properties": {
+         "type": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+         },
+         "address": {
+          "type": "string",
+          "maxLength": 500,
+          "nullable": true
+         },
+         "email": {
+          "type": "string",
+          "format": "email",
+          "nullable": true
+         },
+         "phone": {
+          "type": "string",
+          "maxLength": 50,
+          "nullable": true
+         },
+         "vat_id": {
+          "type": "string",
+          "maxLength": 50,
+          "nullable": true
+         },
+         "iban": {
+          "type": "string",
+          "maxLength": 34,
+          "nullable": true
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/partners/{partner_id}": {
+   "get": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Get Partner",
+    "operationId": "get_partner_api_v1_partners__partner_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Update Partner",
+    "operationId": "update_partner_api_v1_partners__partner_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PartnerUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Patch Partner",
+    "operationId": "patch_partner_api_v1_partners__partner_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PartnerPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Delete Partner",
+    "operationId": "delete_partner_api_v1_partners__partner_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/partners/by-number/{partner_number}": {
+   "get": {
+    "tags": [
+     "partners"
+    ],
+    "summary": "Get Partner By Number",
+    "operationId": "get_partner_by_number_api_v1_partners_by_number__partner_number__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_number",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Partner Number"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/partners/{partner_id}/contracts": {
+   "get": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "List Contracts For Partner",
+    "operationId": "list_contracts_for_partner_api_v1_partners__partner_id__contracts_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/ContractOut"
+         },
+         "title": "Response List Contracts For Partner Api V1 Partners  Partner Id  Contracts Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/contracts/{contract_id}": {
+   "get": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Get Contract",
+    "operationId": "get_contract_api_v1_contracts__contract_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ContractOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Update Contract",
+    "operationId": "update_contract_api_v1_contracts__contract_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ContractUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ContractOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Patch Contract",
+    "operationId": "patch_contract_api_v1_contracts__contract_id__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ContractPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ContractOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Delete Contract",
+    "operationId": "delete_contract_api_v1_contracts__contract_id__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/contracts": {
+   "post": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Create Contract",
+    "operationId": "create_contract_api_v1_contracts_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ContractCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ContractOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/contracts/{contract_id}/status": {
+   "patch": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "Patch Contract Status",
+    "operationId": "patch_contract_status_api_v1_contracts__contract_id__status_patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ContractStatusPatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ContractOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/contracts/{contract_id}/meters": {
+   "get": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "List Meters",
+    "operationId": "list_meters_api_v1_contracts__contract_id__meters_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/MeterOut"
+         },
+         "title": "Response List Meters Api V1 Contracts  Contract Id  Meters Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/contracts/{contract_id}/invoices": {
+   "get": {
+    "tags": [
+     "contracts"
+    ],
+    "summary": "List Invoices",
+    "operationId": "list_invoices_api_v1_contracts__contract_id__invoices_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Contract Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/InvoiceOut"
+         },
+         "title": "Response List Invoices Api V1 Contracts  Contract Id  Invoices Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tariffs": {
+   "get": {
+    "tags": [
+     "tariffs"
+    ],
+    "summary": "List All Tariffs",
+    "description": "Liefert alle Tarife (auch interne) \u2014 f\u00fcr eingeloggte User.",
+    "operationId": "list_all_tariffs_api_v1_tariffs_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/TariffOut"
+         },
+         "type": "array",
+         "title": "Response List All Tariffs Api V1 Tariffs Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "tariffs"
+    ],
+    "summary": "Create Tariff",
+    "operationId": "create_tariff_api_v1_tariffs_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TariffCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TariffOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/tariffs/public": {
+   "get": {
+    "tags": [
+     "tariffs"
+    ],
+    "summary": "List Public Tariffs",
+    "description": "\u00d6ffentliche Tarife \u2014 ohne Auth, f\u00fcr Vergleichsportale o.\u00e4.",
+    "operationId": "list_public_tariffs_api_v1_tariffs_public_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/TariffOut"
+         },
+         "type": "array",
+         "title": "Response List Public Tariffs Api V1 Tariffs Public Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tariffs/{tariff_id}": {
+   "get": {
+    "tags": [
+     "tariffs"
+    ],
+    "summary": "Get Tariff",
+    "description": "Tarif-Detail.\n\nOWASP API2 Bug 2: Im vulnerable_mode pr\u00fcft dieser Endpoint die ``exp``-Claim\nNICHT. Andere Endpoints validieren Tokens strikt. Damit reicht ein l\u00e4ngst\nabgelaufener Token, um Tarif-Details zu lesen.",
+    "operationId": "get_tariff_api_v1_tariffs__tariff_id__get",
+    "parameters": [
+     {
+      "name": "tariff_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Tariff Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TariffOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "tariffs"
+    ],
+    "summary": "Update Tariff",
+    "operationId": "update_tariff_api_v1_tariffs__tariff_id__put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "tariff_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Tariff Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TariffUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TariffOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users/me": {
+   "get": {
+    "tags": [
+     "users"
+    ],
+    "summary": "Get Me",
+    "operationId": "get_me_api_v1_users_me_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "patch": {
+    "tags": [
+     "users"
+    ],
+    "summary": "Patch Me",
+    "operationId": "patch_me_api_v1_users_me_patch",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "properties": {
+         "full_name": {
+          "type": "string",
+          "maxLength": 200,
+          "nullable": true
+         }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UserUpdateMeSecure"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/admin/stats": {
+   "get": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Get Admin Stats",
+    "description": "System-Statistiken \u2014 eigentlich nur f\u00fcr Admins.\n\nOWASP API5 Bug 1: pr\u00fcft Auth, aber nicht die Admin-Rolle (vulnerable_mode).",
+    "operationId": "get_admin_stats_api_v1_admin_stats_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Get Admin Stats Api V1 Admin Stats Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/admin/export/partners": {
+   "get": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Export All Partners",
+    "description": "Massendaten-Export aller Partner aller Tenants \u2014 angeblich nur f\u00fcr Admins.\n\nOWASP API5 Bug 2: kein Admin-Check. Jeder authentifizierte User kann alle\nPartner aller Tenants ziehen.",
+    "operationId": "export_all_partners_api_v1_admin_export_partners_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/PartnerOut"
+         },
+         "type": "array",
+         "title": "Response Export All Partners Api V1 Admin Export Partners Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/admin/users": {
+   "get": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "List All Users",
+    "description": "Liste aller User aller Tenants.",
+    "operationId": "list_all_users_api_v1_admin_users_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "type": "array",
+         "title": "Response List All Users Api V1 Admin Users Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Create User Admin",
+    "description": "Neuen User anlegen \u2014 eigentlich Admin-only.\n\nOWASP API5 Bug 4 (in derselben Familie): kein Admin-Check. Mass-Assignment\nm\u00f6glich, da kein striktes Schema verwendet wird.",
+    "operationId": "create_user_admin_api_v1_admin_users_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "additionalProperties": true,
+        "type": "object",
+        "title": "Payload"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Create User Admin Api V1 Admin Users Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/admin/mode": {
+   "get": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Get Mode",
+    "description": "Gibt den aktuellen vulnerable_mode zur\u00fcck.",
+    "operationId": "get_mode_api_v1_admin_mode_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Get Mode Api V1 Admin Mode Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "admin"
+    ],
+    "summary": "Set Mode",
+    "description": "Schaltet vulnerable_mode zur Laufzeit um \u2014 wirkt sofort ohne Neustart.\n\nErfordert Admin-Rolle im secure-Modus.",
+    "operationId": "set_mode_api_v1_admin_mode_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VulnerableModeRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Set Mode Api V1 Admin Mode Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v0/partners": {
+   "get": {
+    "tags": [
+     "legacy"
+    ],
+    "summary": "List Partners Legacy No Auth",
+    "description": "OWASP API5 Bug 3: alte API-Version ohne Authentifizierung.",
+    "operationId": "list_partners_legacy_no_auth_api_v0_partners_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/PartnerOut"
+         },
+         "type": "array",
+         "title": "Response List Partners Legacy No Auth Api V0 Partners Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/gateway/api/v1/whoami": {
+   "get": {
+    "tags": [
+     "gateway"
+    ],
+    "summary": "Gateway Whoami",
+    "description": "Gibt die vom Gateway ermittelte Identit\u00e4t zur\u00fcck (Consumer + End-User).",
+    "operationId": "gateway_whoami_gateway_api_v1_whoami_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "anyOf": [
+           {
+            "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "type": "object",
+         "title": "Response Gateway Whoami Gateway Api V1 Whoami Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "GatewayApiKey": []
+     },
+     {
+      "GatewayJWT": []
+     }
+    ]
+   }
+  },
+  "/gateway/api/v1/partners": {
+   "get": {
+    "tags": [
+     "gateway"
+    ],
+    "summary": "Gateway List Partners",
+    "description": "Listet die Gesch\u00e4ftspartner des effektiven Tenants.",
+    "operationId": "gateway_list_partners_gateway_api_v1_partners_get",
+    "security": [
+     {
+      "GatewayApiKey": []
+     },
+     {
+      "GatewayJWT": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerListResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/gateway/api/v1/partners/{partner_id}": {
+   "get": {
+    "tags": [
+     "gateway"
+    ],
+    "summary": "Gateway Get Partner",
+    "description": "Liefert einen Partner \u2014 sauber auf den effektiven Tenant beschr\u00e4nkt.",
+    "operationId": "gateway_get_partner_gateway_api_v1_partners__partner_id__get",
+    "security": [
+     {
+      "GatewayApiKey": []
+     },
+     {
+      "GatewayJWT": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "partner_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Partner Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PartnerOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/debug/health": {
+   "get": {
+    "tags": [
+     "debug"
+    ],
+    "summary": "Debug Health",
+    "description": "Spring-Boot-Stil Debug-Endpoint.",
+    "operationId": "debug_health_debug_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Debug Health Debug Health Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/actuator/env": {
+   "get": {
+    "tags": [
+     "debug"
+    ],
+    "summary": "Actuator Env",
+    "description": "Liefert ALLE Environment-Variablen \u2014 extrem leakig.",
+    "operationId": "actuator_env_actuator_env_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "string"
+         },
+         "type": "object",
+         "title": "Response Actuator Env Actuator Env Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/actuator/info": {
+   "get": {
+    "tags": [
+     "debug"
+    ],
+    "summary": "Actuator Info",
+    "description": "Versions- und Build-Info.",
+    "operationId": "actuator_info_actuator_info_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Actuator Info Actuator Info Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "ContractCreate": {
+    "properties": {
+     "partner_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Partner Id"
+     },
+     "tariff_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Tariff Id"
+     },
+     "contract_number": {
+      "type": "string",
+      "maxLength": 50,
+      "minLength": 1,
+      "title": "Contract Number"
+     },
+     "start_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date"
+     },
+     "end_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "End Date"
+     },
+     "monthly_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+       }
+      ],
+      "title": "Monthly Amount"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "partner_id",
+     "tariff_id",
+     "contract_number",
+     "start_date",
+     "monthly_amount"
+    ],
+    "title": "ContractCreate"
+   },
+   "ContractOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "partner_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Partner Id"
+     },
+     "tariff_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Tariff Id"
+     },
+     "contract_number": {
+      "type": "string",
+      "title": "Contract Number"
+     },
+     "status": {
+      "$ref": "#/components/schemas/ContractStatus"
+     },
+     "start_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date"
+     },
+     "end_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "End Date"
+     },
+     "monthly_amount": {
+      "type": "string",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Monthly Amount"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "partner_id",
+     "tariff_id",
+     "contract_number",
+     "status",
+     "start_date",
+     "end_date",
+     "monthly_amount",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "ContractOut"
+   },
+   "ContractPatch": {
+    "properties": {
+     "tariff_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tariff Id"
+     },
+     "start_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Start Date"
+     },
+     "end_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "End Date"
+     },
+     "monthly_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Monthly Amount"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ContractStatus"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "ContractPatch"
+   },
+   "ContractStatus": {
+    "type": "string",
+    "enum": [
+     "DRAFT",
+     "ACTIVE",
+     "SUSPENDED",
+     "TERMINATED"
+    ],
+    "title": "ContractStatus"
+   },
+   "ContractStatusPatch": {
+    "properties": {
+     "status": {
+      "$ref": "#/components/schemas/ContractStatus"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "status"
+    ],
+    "title": "ContractStatusPatch"
+   },
+   "ContractUpdate": {
+    "properties": {
+     "tariff_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Tariff Id"
+     },
+     "start_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Start Date"
+     },
+     "end_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "End Date"
+     },
+     "monthly_amount": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+       }
+      ],
+      "title": "Monthly Amount"
+     },
+     "status": {
+      "$ref": "#/components/schemas/ContractStatus"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "tariff_id",
+     "start_date",
+     "monthly_amount",
+     "status"
+    ],
+    "title": "ContractUpdate"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "InvoiceOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "contract_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Contract Id"
+     },
+     "invoice_number": {
+      "type": "string",
+      "title": "Invoice Number"
+     },
+     "amount": {
+      "type": "string",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Amount"
+     },
+     "issued_at": {
+      "type": "string",
+      "format": "date",
+      "title": "Issued At"
+     },
+     "due_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Due Date"
+     },
+     "paid_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Paid At"
+     },
+     "status": {
+      "$ref": "#/components/schemas/InvoiceStatus"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "contract_id",
+     "invoice_number",
+     "amount",
+     "issued_at",
+     "due_date",
+     "paid_at",
+     "status",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "InvoiceOut"
+   },
+   "InvoiceStatus": {
+    "type": "string",
+    "enum": [
+     "OPEN",
+     "PAID",
+     "OVERDUE",
+     "CANCELLED"
+    ],
+    "title": "InvoiceStatus"
+   },
+   "LoginRequest": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "format": "email",
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "LoginRequest"
+   },
+   "MeterOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "contract_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Contract Id"
+     },
+     "meter_number": {
+      "type": "string",
+      "title": "Meter Number"
+     },
+     "current_reading": {
+      "type": "string",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Current Reading"
+     },
+     "last_reading_date": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Reading Date"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "contract_id",
+     "meter_number",
+     "current_reading",
+     "last_reading_date",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "MeterOut"
+   },
+   "PartnerListResponse": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/PartnerOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "limit",
+     "offset"
+    ],
+    "title": "PartnerListResponse"
+   },
+   "PartnerOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Tenant Id"
+     },
+     "partner_number": {
+      "type": "string",
+      "title": "Partner Number"
+     },
+     "type": {
+      "$ref": "#/components/schemas/PartnerType"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "address": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Address"
+     },
+     "email": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Email"
+     },
+     "phone": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Phone"
+     },
+     "vat_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vat Id"
+     },
+     "iban": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Iban"
+     },
+     "status": {
+      "$ref": "#/components/schemas/PartnerStatus"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tenant_id",
+     "partner_number",
+     "type",
+     "name",
+     "address",
+     "email",
+     "phone",
+     "vat_id",
+     "iban",
+     "status",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "PartnerOut"
+   },
+   "PartnerPatch": {
+    "properties": {
+     "type": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/PartnerType"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "address": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Address"
+     },
+     "email": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "email"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Email"
+     },
+     "phone": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 50
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Phone"
+     },
+     "vat_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 50
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vat Id"
+     },
+     "iban": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 34
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Iban"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/PartnerStatus"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "PartnerPatch",
+    "description": "Teil-Update: alles optional."
+   },
+   "PartnerStatus": {
+    "type": "string",
+    "enum": [
+     "ACTIVE",
+     "INACTIVE",
+     "BLOCKED"
+    ],
+    "title": "PartnerStatus"
+   },
+   "PartnerType": {
+    "type": "string",
+    "enum": [
+     "PRIVATE",
+     "BUSINESS",
+     "PUBLIC"
+    ],
+    "title": "PartnerType"
+   },
+   "PartnerUpdate": {
+    "properties": {
+     "type": {
+      "$ref": "#/components/schemas/PartnerType"
+     },
+     "name": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "address": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Address"
+     },
+     "email": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "email"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Email"
+     },
+     "phone": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 50
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Phone"
+     },
+     "vat_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 50
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vat Id"
+     },
+     "iban": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 34
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Iban"
+     },
+     "status": {
+      "$ref": "#/components/schemas/PartnerStatus"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "type",
+     "name",
+     "status"
+    ],
+    "title": "PartnerUpdate",
+    "description": "Vollst\u00e4ndiges PUT \u2014 alle \u00e4nderbaren Felder erforderlich (au\u00dfer optional-feldern)."
+   },
+   "TariffCreate": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "price_per_kwh": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,4}0*$"
+       }
+      ],
+      "title": "Price Per Kwh"
+     },
+     "base_fee": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+       }
+      ],
+      "title": "Base Fee"
+     },
+     "valid_from": {
+      "type": "string",
+      "format": "date",
+      "title": "Valid From"
+     },
+     "valid_to": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Valid To"
+     },
+     "public": {
+      "type": "boolean",
+      "title": "Public",
+      "default": true
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "price_per_kwh",
+     "base_fee",
+     "valid_from"
+    ],
+    "title": "TariffCreate"
+   },
+   "TariffOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "price_per_kwh": {
+      "type": "string",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Price Per Kwh"
+     },
+     "base_fee": {
+      "type": "string",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Base Fee"
+     },
+     "valid_from": {
+      "type": "string",
+      "format": "date",
+      "title": "Valid From"
+     },
+     "valid_to": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Valid To"
+     },
+     "public": {
+      "type": "boolean",
+      "title": "Public"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "description",
+     "price_per_kwh",
+     "base_fee",
+     "valid_from",
+     "valid_to",
+     "public",
+     "created_at",
+     "updated_at"
+    ],
+    "title": "TariffOut"
+   },
+   "TariffUpdate": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "price_per_kwh": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,4}0*$"
+       }
+      ],
+      "title": "Price Per Kwh"
+     },
+     "base_fee": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "string",
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+       }
+      ],
+      "title": "Base Fee"
+     },
+     "valid_from": {
+      "type": "string",
+      "format": "date",
+      "title": "Valid From"
+     },
+     "valid_to": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Valid To"
+     },
+     "public": {
+      "type": "boolean",
+      "title": "Public"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "name",
+     "price_per_kwh",
+     "base_fee",
+     "valid_from",
+     "public"
+    ],
+    "title": "TariffUpdate"
+   },
+   "TokenResponse": {
+    "properties": {
+     "access_token": {
+      "type": "string",
+      "title": "Access Token"
+     },
+     "token_type": {
+      "type": "string",
+      "title": "Token Type",
+      "default": "bearer"
+     },
+     "expires_in": {
+      "type": "integer",
+      "title": "Expires In"
+     }
+    },
+    "type": "object",
+    "required": [
+     "access_token",
+     "expires_in"
+    ],
+    "title": "TokenResponse"
+   },
+   "UserOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Id"
+     },
+     "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "title": "Tenant Id"
+     },
+     "email": {
+      "type": "string",
+      "format": "email",
+      "title": "Email"
+     },
+     "full_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Full Name"
+     },
+     "role": {
+      "$ref": "#/components/schemas/UserRole"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tenant_id",
+     "email",
+     "full_name",
+     "role"
+    ],
+    "title": "UserOut"
+   },
+   "UserRole": {
+    "type": "string",
+    "enum": [
+     "USER",
+     "MANAGER",
+     "ADMIN"
+    ],
+    "title": "UserRole"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "VulnerableModeRequest": {
+    "properties": {
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+     }
+    },
+    "type": "object",
+    "required": [
+     "enabled"
+    ],
+    "title": "VulnerableModeRequest"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "type": "http",
+    "scheme": "bearer"
+   },
+   "GatewayApiKey": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "x-Gateway-APIKey"
+   },
+   "GatewayJWT": {
+    "type": "http",
+    "scheme": "bearer"
+   }
+  }
+ }
+}

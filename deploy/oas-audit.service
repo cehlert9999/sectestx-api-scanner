@@ -1,0 +1,30 @@
+# systemd-Unit für den Hetzner-Server (Alternative zu Docker).
+#   cp deploy/oas-audit.service /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now oas-audit
+[Unit]
+Description=oas-audit — statischer OpenAPI-Security-Scan (api.sectestx.leanofy.de)
+After=network.target
+
+[Service]
+User=oas-audit
+Group=oas-audit
+WorkingDirectory=/opt/oas-audit
+EnvironmentFile=/etc/oas-audit/env
+ExecStart=/opt/oas-audit/.venv/bin/python -m oas_audit.service
+Restart=on-failure
+RestartSec=3
+
+# Härtung: nichts schreiben, nichts nachladen, keine Privilegien
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=1G
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

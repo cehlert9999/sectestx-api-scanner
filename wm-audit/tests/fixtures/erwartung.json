@@ -1,0 +1,41 @@
+{
+ "_comment": "Ground Truth fuer wm-audit. KONSTRUIERT, nicht aus einem echten Kundenexport abgeleitet - die oeffentlichen Beispiel-Assets enthalten keine bewussten Sicherheitsfehler. Prueft, dass jede Regel genau dort greift, wo der Fehler eingebaut wurde, und nirgends sonst.",
+ "faelle": [
+  {
+   "api": "OffeneAPI 1.0",
+   "erwartet": [
+    "gw.no_identify_policy"
+   ],
+   "warum": "keine evaluatePolicy konfiguriert"
+  },
+  {
+   "api": "AnonymAPI 1.0",
+   "erwartet": [
+    "gw.anonymous_allowed",
+    "gw.application_identity_only"
+   ],
+   "warum": "allowAnonymous hebt die Identifikation auf"
+  },
+  {
+   "api": "OderAPI 1.0",
+   "erwartet": [
+    "gw.identify_or"
+   ],
+   "warum": "apiKey ODER oAuth2Token - das schwaechste Glied genuegt"
+  },
+  {
+   "api": "KlartextAPI 1.0",
+   "erwartet": [
+    "gw.plaintext_backend",
+    "gw.http_allowed",
+    "gw.pass_security_headers"
+   ],
+   "warum": "HTTP am Eingang, Klartext-Backend, Header werden durchgereicht"
+  },
+  {
+   "api": "SauberAPI 1.0",
+   "erwartet": [],
+   "warum": "korrekt konfiguriert - jeder Befund hier waere eine Falschmeldung"
+  }
+ ]
+}

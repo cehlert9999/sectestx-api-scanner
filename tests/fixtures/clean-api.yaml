@@ -1,0 +1,125 @@
+# Bewusst saubere Referenz-Spezifikation. Erwartung: Note A in beiden
+# Dimensionen, kein belegter Befund, kein Hinweis über MITTEL.
+# Jeder belegte Befund hier ist eine Falschmeldung.
+openapi: 3.0.3
+info:
+  title: Clean Orders API
+  version: 2.1.0
+servers:
+  - url: https://api.acme-orders.io/v2
+security:
+  - OAuth2: [orders:read]
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.acme-orders.io/authorize
+          tokenUrl: https://auth.acme-orders.io/token
+          scopes:
+            orders:read: Bestellungen lesen
+            orders:write: Bestellungen anlegen und löschen
+  schemas:
+    Error:
+      type: object
+      additionalProperties: false
+      properties:
+        code: {type: string, maxLength: 64}
+        message: {type: string, maxLength: 512}
+    Order:
+      type: object
+      additionalProperties: false
+      properties:
+        id: {type: string, format: uuid}
+        status: {type: string, enum: [open, paid, shipped]}
+        total_amount: {type: number}
+        currency: {type: string, enum: [EUR, CHF]}
+    OrderCreate:
+      type: object
+      additionalProperties: false
+      required: [currency, lines]
+      properties:
+        currency: {type: string, enum: [EUR, CHF]}
+        note: {type: string, maxLength: 200}
+        lines:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              sku: {type: string, maxLength: 32}
+              quantity: {type: integer, minimum: 1, maximum: 1000}
+    OrderPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items: {$ref: '#/components/schemas/Order'}
+        next_cursor: {type: string, maxLength: 128}
+  responses:
+    Unauthorized:
+      description: Kein oder ungültiges Token
+      content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}
+    Forbidden:
+      description: Token ohne ausreichenden Scope
+      content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}
+    NotFound:
+      description: Objekt nicht vorhanden oder nicht sichtbar
+      content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}
+    TooManyRequests:
+      description: Rate-Limit erreicht
+paths:
+  /orders:
+    get:
+      summary: Bestellungen auflisten
+      parameters:
+        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 100}}
+        - {name: cursor, in: query, schema: {type: string, maxLength: 128}}
+      responses:
+        '200':
+          description: Seite
+          content: {application/json: {schema: {$ref: '#/components/schemas/OrderPage'}}}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '429': {$ref: '#/components/responses/TooManyRequests'}
+    post:
+      summary: Bestellung anlegen
+      security:
+        - OAuth2: [orders:write]
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: '#/components/schemas/OrderCreate'}}}
+      responses:
+        '201':
+          description: angelegt
+          content: {application/json: {schema: {$ref: '#/components/schemas/Order'}}}
+        '400':
+          description: ungültig
+          content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+  /orders/{orderId}:
+    parameters:
+      - {name: orderId, in: path, required: true, schema: {type: string, format: uuid}}
+    get:
+      summary: Bestellung lesen
+      responses:
+        '200':
+          description: Bestellung
+          content: {application/json: {schema: {$ref: '#/components/schemas/Order'}}}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      summary: Bestellung stornieren
+      security:
+        - OAuth2: [orders:write]
+      responses:
+        '204': {description: storniert}
+        '401': {$ref: '#/components/responses/Unauthorized'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}

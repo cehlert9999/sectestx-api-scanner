@@ -1,0 +1,19 @@
+{
+ "id": "y2",
+ "names": [
+  {
+   "value": "Traffic",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttlingPolicy",
+ "parameters": [
+  {
+   "templateKey": "maxRequests",
+   "values": [
+    "10"
+   ]
+  }
+ ],
+ "active": false
+}

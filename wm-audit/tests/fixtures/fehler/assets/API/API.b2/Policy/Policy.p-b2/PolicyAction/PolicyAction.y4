@@ -1,0 +1,19 @@
+{
+ "id": "y4",
+ "names": [
+  {
+   "value": "HTTPS",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "https"
+   ]
+  }
+ ],
+ "active": false
+}

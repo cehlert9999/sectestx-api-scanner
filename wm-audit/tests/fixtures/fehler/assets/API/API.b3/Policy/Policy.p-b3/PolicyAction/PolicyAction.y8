@@ -1,0 +1,19 @@
+{
+ "id": "y8",
+ "names": [
+  {
+   "value": "T",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttlingPolicy",
+ "parameters": [
+  {
+   "templateKey": "maxRequests",
+   "values": [
+    "10"
+   ]
+  }
+ ],
+ "active": false
+}

@@ -1,0 +1,38 @@
+[project]
+name = "wm-audit"
+version = "0.1.0"
+description = "Statische Security-Analyse für webMethods-API-Gateway-Exporte — liest die tatsächliche Konfiguration, nicht nur die Dokumentation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Christian Ehlert" }]
+keywords = ["webmethods", "api-gateway", "security", "owasp", "static-analysis"]
+
+dependencies = [
+    "oas-audit",
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-cov>=5.0", "ruff>=0.6"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["wm_audit*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers"]

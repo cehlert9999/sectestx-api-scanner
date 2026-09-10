@@ -1,0 +1,40 @@
+{
+ "id": "a1",
+ "apiName": "SauberAPI",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Production",
+ "apiGroups": [
+  "Internal"
+ ],
+ "nativeEndpoint": [
+  {
+   "uri": "https://backend.example/v1",
+   "passSecurityHeaders": false,
+   "connectionTimeoutDuration": 0,
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-a1"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.0",
+  "info": {
+   "title": "SauberAPI",
+   "version": "1.0"
+  },
+  "paths": {
+   "/items/{itemId}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

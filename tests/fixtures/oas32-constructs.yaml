@@ -1,0 +1,39 @@
+# OpenAPI-3.2-Konstrukte, die ein Scanner mit fester Methodenliste stumm übergeht.
+# Erwartung: kein Absturz, und jede nicht ausgewertete Struktur steht namentlich
+# unter den Blindstellen.
+openapi: 3.2.0
+info: {title: OAS 3.2 Constructs, version: '1'}
+servers: [{url: https://api.acme-32.io}]
+security: [{Bearer: []}]
+components:
+  securitySchemes:
+    Bearer: {type: http, scheme: bearer}
+paths:
+  /search:
+    query:
+      summary: QUERY-Methode (neu in 3.2)
+      responses: {'200': {description: ok}}
+    get:
+      parameters:
+        - name: filter
+          in: querystring
+          schema: {type: object}
+      responses: {'200': {description: ok}}
+  /jobs:
+    additionalOperations:
+      PURGE:
+        summary: Nicht-Standard-Methode
+        responses: {'200': {description: ok}}
+    get:
+      responses:
+        '200':
+          description: Stream
+          content:
+            application/jsonl:
+              itemSchema:
+                type: object
+                properties: {iban: {type: string}}
+webhooks:
+  orderShipped:
+    post:
+      responses: {'200': {description: ok}}

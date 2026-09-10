@@ -1,0 +1,59 @@
+{
+ "id": "y6",
+ "names": [
+  {
+   "value": "Identify & Authorize",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "logicalConnector",
+   "values": [
+    "OR"
+   ]
+  },
+  {
+   "templateKey": "allowAnonymous",
+   "values": [
+    "false"
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "applicationLookup",
+     "values": [
+      "strict"
+     ]
+    },
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "apiKey"
+     ]
+    }
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "applicationLookup",
+     "values": [
+      "strict"
+     ]
+    },
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "oAuth2Token"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": false
+}
