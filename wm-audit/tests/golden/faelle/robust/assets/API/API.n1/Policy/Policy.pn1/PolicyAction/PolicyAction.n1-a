@@ -1,0 +1,30 @@
+{
+ "id": "n1-a",
+ "names": [
+  {
+   "value": "Identify & Authorize",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "logicalConnector",
+   "values": [
+    "AND"
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "jwtClaims"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": false
+}

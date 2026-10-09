@@ -137,8 +137,11 @@ dasselbe Befund-Modell für Gateway-Exporte.
 - **TestCase** (`catalog.py`): `key`, `owasp`, `priority` 1–3, `method`, `path`, `title`,
   `precondition`, `steps[]`, `expected`, `fail_signal`, `static_state`, `related_check`,
   `also_applies_to[]`, `controls[]`; `id` stabil aus `key|method|path`.
-- **Score** (`scoring.py`): `design` und `hygiene` je `Grade(letter, points, uncapped, caps[])`,
-  `runtime_gap_count`, `note`.
+- **Score** (`scoring.py`): `design` und `hygiene` je `Grade(letter, points, uncapped,
+  caps[], finding_count)`, `runtime_gap_count`, `note`. Der Dienst reicht je Dimension
+  `letter`/`uncapped`/`finding_count` als `summary.grades` durch — Herleitungsdaten, damit
+  das UI erklären kann, WIE die Note zustande kam (Anzahl bewertender Befunde + Deckel-Effekt
+  = Endnote schlechter als `uncapped`).
 
 ## 5. Analysepipeline
 
@@ -334,7 +337,10 @@ Basis: `https://api.sectestx.leanofy.de`. Kein Docs-UI (`/docs` → 404), OpenAP
 {
   "tool": {"name": "oas-audit", "version": "0.2.0"},
   "source": {"hash": "…", "spec_version": "3.1.0", "title": "…", "endpoint_count": 38},
-  "summary": {"grade_design": "F", "grade_hygiene": "B", "caps": [...],
+  "summary": {"grade_design": "F", "grade_hygiene": "B",
+              "grades": {"design":  {"letter": "F", "uncapped": "F", "finding_count": 6},
+                         "hygiene": {"letter": "B", "uncapped": "B", "finding_count": 3}},
+              "caps": [...],
               "counts": {"belegt": 11, "wahrscheinlich": 18, "aggregat": 4},
               "runtime_gap_count": 12, "catalog_count": 80, "note": "Eine gute Note …"},
   "findings": [...], "catalog": [...], "blind_spots": [...], "runtime_gaps": [...],

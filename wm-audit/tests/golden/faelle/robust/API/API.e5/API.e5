@@ -1,0 +1,10 @@
+{
+ "apiName": "E5",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "nativeEndpoint": [
+  {
+   "uri": "http://e5.example"
+  }
+ ]
+}

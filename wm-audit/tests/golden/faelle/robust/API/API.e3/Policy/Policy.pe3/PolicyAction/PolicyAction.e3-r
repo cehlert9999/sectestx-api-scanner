@@ -1,0 +1,19 @@
+{
+ "id": "e3-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${Ziel2}/x"
+   ]
+  }
+ ],
+ "active": false
+}

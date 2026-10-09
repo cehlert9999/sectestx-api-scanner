@@ -1,0 +1,11 @@
+{
+ "apiName": "R22",
+ "apiVersion": 9007199254740992.0,
+ "type": "REST",
+ "nativeEndpoint": [
+  {
+   "uri": "https://backend.example",
+   "passSecurityHeaders": false
+  }
+ ]
+}

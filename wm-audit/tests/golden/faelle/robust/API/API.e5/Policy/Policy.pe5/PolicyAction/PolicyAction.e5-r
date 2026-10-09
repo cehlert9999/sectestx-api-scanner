@@ -1,0 +1,19 @@
+{
+ "id": "e5-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "contentBasedRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "https://e5.example"
+   ]
+  }
+ ],
+ "active": false
+}

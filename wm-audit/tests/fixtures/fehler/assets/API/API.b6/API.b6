@@ -1,0 +1,36 @@
+{
+ "id": "b6",
+ "apiName": "LogAPI",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Beta",
+ "nativeEndpoint": [
+  {
+   "uri": "https://backend.example/v6",
+   "passSecurityHeaders": false,
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-b6"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.1",
+  "info": {
+   "title": "LogAPI",
+   "version": "1.0"
+  },
+  "paths": {
+   "/zaehler/{id}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

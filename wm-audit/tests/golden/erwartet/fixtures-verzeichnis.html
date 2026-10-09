@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Keine Verbindungen nach außen: der Bericht lädt nichts nach. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+<meta name="referrer" content="no-referrer">
+<title>wm-audit · Prüfbericht</title>
+<style>
+:root {
+  --bg: #060d1c; --flaeche: #0d1c2d; --flaeche-hoch: #122131; --rand: #27384d;
+  --text: #d4e4fa; --leise: #9aa6bd; --akzent: #00f5ff;
+  --critical: #ff5f6d; --high: #ffa45c; --medium: #f2d15c; --low: #6cb6ff; --info: #9aa6bd;
+  --ok: #00d084;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; font-family: var(--sans); color: var(--text); font-size: 15px; line-height: 1.55;
+  background: radial-gradient(ellipse 80% 50% at 0% 0%, rgba(0,245,255,0.07), transparent 60%), var(--bg); }
+.seite { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; }
+.mono { font-family: var(--mono); }
+.leise { color: var(--leise); }
+a { color: var(--akzent); }
+
+header.kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  padding-bottom: 24px; border-bottom: 1px solid var(--rand); }
+.marke { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--akzent); }
+h1 { font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; margin: 8px 0 6px; letter-spacing: -.01em; }
+.quelle { font-size: 14px; color: var(--leise); }
+.quelle b { color: var(--text); font-weight: 600; }
+.sha { font-family: var(--mono); font-size: 12px; color: var(--leise); word-break: break-all; margin-top: 4px; }
+.offline { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(0,208,132,.45);
+  background: rgba(0,208,132,.08); color: var(--ok); border-radius: 999px; padding: 6px 14px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.offline::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+
+.kacheln { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 28px 0; }
+.kachel { background: var(--flaeche); border: 1px solid var(--rand); border-radius: 10px; padding: 16px 18px; }
+.kachel-w { font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--akzent); }
+.kachel-t { font-weight: 600; margin-top: 4px; }
+.kachel-x { font-size: 13px; color: var(--leise); margin-top: 2px; }
+.balken { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--flaeche-hoch); margin-top: 10px; }
+.balken span { display: block; height: 100%; }
+
+h2 { font-size: 21px; margin: 40px 0 6px; }
+.abschnitt-x { color: var(--leise); margin: 0 0 16px; font-size: 14px; }
+
+.filter { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+.chip { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  border: 1px solid var(--rand); background: var(--flaeche); color: var(--leise); border-radius: 999px; padding: 6px 12px; }
+.chip[aria-pressed="true"] { border-color: var(--akzent); color: var(--akzent); background: rgba(0,245,255,.08); }
+.chip .zahl { opacity: .75; margin-left: 4px; }
+.schalter { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--leise); cursor: pointer; }
+
+.befund { position: relative; background: var(--flaeche); border: 1px solid var(--rand); border-radius: 10px;
+  padding: 18px 20px 18px 24px; margin-bottom: 12px; overflow: hidden; }
+.befund::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--farbe, var(--info)); }
+.befund-kopf { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.stufe { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .1em; border-radius: 5px; padding: 3px 8px;
+  color: var(--farbe); border: 1px solid var(--farbe); background: color-mix(in srgb, var(--farbe) 12%, transparent); }
+.marker { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; border-radius: 5px; padding: 3px 8px;
+  border: 1px solid var(--rand); color: var(--leise); }
+.marker.belegt { color: var(--text); border-color: #3b5370; }
+.regel { font-family: var(--mono); font-size: 12px; color: var(--leise); margin-left: auto; }
+.befund h3 { margin: 10px 0 2px; font-size: 18px; }
+.betrifft { font-size: 14px; color: var(--leise); }
+.betrifft b { color: var(--text); font-weight: 600; }
+.befund p { margin: 10px 0 0; }
+.empfehlung { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(0,245,255,.05);
+  border: 1px solid rgba(0,245,255,.18); font-size: 14px; }
+.empfehlung::before { content: "Empfehlung"; display: block; font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--akzent); margin-bottom: 2px; }
+.beleg { margin-top: 12px; font-family: var(--mono); font-size: 12.5px; background: #04101e; border: 1px solid var(--rand);
+  border-radius: 8px; padding: 10px 14px; color: var(--leise); overflow-x: auto; }
+.beleg div + div { margin-top: 4px; }
+.beleg .k { color: #6f86a6; display: inline-block; min-width: 72px; }
+.beleg .v { color: var(--text); white-space: pre-wrap; word-break: break-word; }
+details.liste { margin-top: 10px; font-size: 14px; }
+details.liste summary { cursor: pointer; color: var(--akzent); }
+details.liste ul { margin: 8px 0 0; padding-left: 20px; columns: 2; }
+.leer { padding: 28px; text-align: center; border: 1px dashed var(--rand); border-radius: 10px; color: var(--leise); }
+.leer.gut { color: var(--ok); border-color: rgba(0,208,132,.45); }
+
+table { width: 100%; border-collapse: collapse; background: var(--flaeche); border: 1px solid var(--rand); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rand); vertical-align: top; font-size: 14px; }
+th { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--leise); font-weight: 500; background: var(--flaeche-hoch); }
+tr:last-child td { border-bottom: none; }
+td.pfad { font-family: var(--mono); font-size: 12px; color: var(--leise); word-break: break-all; }
+.pol { display: inline-block; font-family: var(--mono); font-size: 11px; border: 1px solid var(--rand); border-radius: 5px;
+  padding: 1px 6px; margin: 2px 4px 2px 0; color: var(--leise); }
+
+.luecken { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.luecke { background: var(--flaeche); border: 1px solid rgba(198,193,242,.35); border-radius: 10px; padding: 14px 16px; }
+.luecke-t { font-weight: 600; }
+.luecke-x { font-size: 13px; color: var(--leise); margin-top: 4px; }
+.luecke .marker { margin-top: 8px; display: inline-block; }
+
+.aufgaben { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.gruppe { background: var(--flaeche); border: 1px solid var(--rand); border-radius: 10px; padding: 16px 18px; }
+.gruppe.sofort { border-color: color-mix(in srgb, var(--critical) 55%, var(--rand)); }
+.gruppe-t { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+.gruppe.sofort .gruppe-t { color: var(--critical); }
+.gruppe.pruefen .gruppe-t { color: var(--medium); }
+.gruppe-x { font-size: 13px; color: var(--leise); margin-bottom: 10px; }
+.aufgabe { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--rand); }
+.aufgabe:first-of-type { border-top: none; }
+.aufgabe input { margin-top: 4px; accent-color: var(--ok); }
+.aufgabe-t { font-weight: 600; }
+.aufgabe-a { font-size: 13px; color: var(--leise); }
+.aufgabe a { font-size: 13px; white-space: nowrap; margin-left: auto; padding-left: 8px; }
+.aufgabe input:checked ~ div .aufgabe-t { text-decoration: line-through; color: var(--leise); }
+.hinweis-allg { margin-top: 14px; font-size: 13px; color: var(--leise); border-left: 3px solid var(--akzent);
+  padding: 8px 12px; background: rgba(0,245,255,.04); border-radius: 0 8px 8px 0; }
+.block { margin-top: 14px; }
+.block-t { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--akzent); margin-bottom: 4px; }
+.block ol { margin: 4px 0 0; padding-left: 22px; }
+.block ol li { margin: 3px 0; }
+.befehl { margin-top: 8px; font-family: var(--mono); font-size: 12.5px; background: #04101e; border: 1px solid var(--rand);
+  border-radius: 8px; padding: 8px 12px; color: var(--text); overflow-x: auto; white-space: pre; }
+.zwei-spalten { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+details.technik { margin-top: 14px; font-size: 14px; }
+details.technik > summary { cursor: pointer; color: var(--leise); font-family: var(--mono); font-size: 12px; letter-spacing: .06em; }
+td.tun { font-size: 13px; color: var(--leise); }
+.luecke-tun { font-size: 13px; margin-top: 6px; }
+.luecke-tun::before { content: "So prüfen: "; color: var(--akzent); font-weight: 600; }
+
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--rand); font-size: 13px; color: var(--leise);
+  display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+@media (max-width: 760px) {
+  .kacheln { grid-template-columns: repeat(2, 1fr); }
+  .aufgaben, .zwei-spalten { grid-template-columns: 1fr; }
+  .luecken { grid-template-columns: 1fr; }
+  .regel { margin-left: 0; width: 100%; }
+  details.liste ul { columns: 1; }
+}
+
+@media print {
+  :root { --bg: #fff; --flaeche: #fff; --flaeche-hoch: #f3f6fa; --rand: #d5dde8; --text: #111827; --leise: #4b5563; --akzent: #0b7285; }
+  body { background: #fff; font-size: 12px; }
+  .seite { padding: 0; max-width: none; }
+  .filter, .schalter { display: none !important; }
+  .befund, .gruppe { break-inside: avoid; }
+  details.technik { display: none; }
+  .beleg { background: #f8fafc; }
+  .offline { color: #047857; border-color: #047857; background: none; }
+  details.liste > ul { display: block; }
+}
+</style>
+</head>
+<body>
+<div class="seite" id="seite">
+  <noscript>Dieser Bericht braucht JavaScript zur Darstellung. Die Rohdaten stehen als JSON im Quelltext dieser Datei.</noscript>
+</div>
+
+<script id="bericht" type="application/json">{
+  "apis": [
+    {
+      "id": "c1",
+      "label": "RoutingKlartextAPI 2.0",
+      "name": "RoutingKlartextAPI",
+      "pfad": "echt/routing-klartext/API/API.c1/API.c1",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "2.0"
+    },
+    {
+      "id": "c2",
+      "label": "SpecHttpAPI 1.0",
+      "name": "SpecHttpAPI",
+      "pfad": "echt/spec-http/API/API.c2/API.c2",
+      "policies": [
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b1",
+      "label": "OffeneAPI 1.0",
+      "name": "OffeneAPI",
+      "pfad": "fehler/assets/API/API.b1/API.b1",
+      "policies": [
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b2",
+      "label": "AnonymAPI 1.0",
+      "name": "AnonymAPI",
+      "pfad": "fehler/assets/API/API.b2/API.b2",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b3",
+      "label": "OderAPI 1.0",
+      "name": "OderAPI",
+      "pfad": "fehler/assets/API/API.b3/API.b3",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b4",
+      "label": "KlartextAPI 1.0",
+      "name": "KlartextAPI",
+      "pfad": "fehler/assets/API/API.b4/API.b4",
+      "policies": [
+        "entryProtocolPolicy",
+        "throttlingPolicy",
+        "evaluatePolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b5",
+      "label": "OhneLimitAPI 1.0",
+      "name": "OhneLimitAPI",
+      "pfad": "fehler/assets/API/API.b5/API.b5",
+      "policies": [
+        "entryProtocolPolicy",
+        "evaluatePolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b6",
+      "label": "LogAPI 1.0",
+      "name": "LogAPI",
+      "pfad": "fehler/assets/API/API.b6/API.b6",
+      "policies": [
+        "entryProtocolPolicy",
+        "evaluatePolicy",
+        "throttlingPolicy",
+        "logInvocation"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "a1",
+      "label": "SauberAPI 1.0",
+      "name": "SauberAPI",
+      "pfad": "sauber/assets/API/API.a1/API.a1",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    }
+  ],
+  "befunde": [
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.anonymous_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "allowAnonymous: true",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b2/API.b2 → Identify & Authorize"
+        }
+      ],
+      "id": "cc3962deec81",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Identify-and-Authorize-Policy ist konfiguriert, lässt über allowAnonymous aber Anfragen ohne Identifikation durch. Die Policy sieht in der Oberfläche vorhanden aus und greift trotzdem nicht.",
+      "remediation": "allowAnonymous auf false setzen.",
+      "scope": "api",
+      "severity": "critical",
+      "subject": "AnonymAPI 1.0",
+      "title": "Identify-Policy erlaubt anonymen Zugriff"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.http_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "protocol: http, https",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4 → HTTP+HTTPS"
+        }
+      ],
+      "id": "f0180eb09fc8",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Die Entry-Protocol-Policy lässt HTTP zu. Zugangsdaten und Nutzdaten sind auf dem Weg zum Gateway mitlesbar.",
+      "remediation": "Nur HTTPS zulassen und HTTP an der Kante umleiten oder abweisen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "KlartextAPI 1.0",
+      "title": "Gateway akzeptiert unverschlüsseltes HTTP"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.identify_or",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "logicalConnector: OR, identificationType: apiKey, oAuth2Token",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b3/API.b3 → Identify & Authorize"
+        }
+      ],
+      "id": "2eae8d04c34f",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Policy akzeptiert apiKey oder oAuth2Token — es genügt also das schwächste dieser Verfahren. Wo API-Key *und* Token gemeint waren, reicht dann der API-Key allein.",
+      "remediation": "logicalConnector auf AND setzen, wenn beide Nachweise verlangt sind. Ist ODER beabsichtigt, muss jedes einzelne Verfahren für sich als ausreichend gelten.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "OderAPI 1.0",
+      "title": "Mehrere Identifikationsverfahren sind ODER-verknüpft"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "policyActions: entryProtocolPolicy, throttlingPolicy",
+          "note": "kein evaluatePolicy vorhanden",
+          "pointer": "fehler/assets/API/API.b1/API.b1"
+        }
+      ],
+      "id": "bcbe013afbe0",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "OffeneAPI 1.0",
+      "title": "API ohne Identify-and-Authorize-Policy"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "policyActions: entryProtocolPolicy, straightThroughRouting, throttle",
+          "note": "kein evaluatePolicy vorhanden",
+          "pointer": "echt/spec-http/API/API.c2/API.c2"
+        }
+      ],
+      "id": "ce0bc4c30d02",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "SpecHttpAPI 1.0",
+      "title": "API ohne Identify-and-Authorize-Policy"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: http://intern.example/v1",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4"
+        }
+      ],
+      "id": "cc8ef33cc27c",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://intern.example/v1 weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "KlartextAPI 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: ${Backend}/${sys:resource_path}",
+          "note": "über Alias aufgelöst: http://***@backend.intern:8080/${sys:resource_path}",
+          "pointer": "echt/routing-klartext/API/API.c1/API.c1 → Straight Through Routing"
+        }
+      ],
+      "id": "73f1acb1895e",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://***@backend.intern:8080/${sys:resource_path} weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "RoutingKlartextAPI 2.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.application_identity_only",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "identificationType: apiKey",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b2/API.b2 → Identify & Authorize"
+        }
+      ],
+      "id": "78821dc516ac",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Identifiziert wird ausschließlich über apiKey. Das weist eine Anwendung aus, nicht den handelnden Benutzer — jede benutzerbezogene Autorisierung muss dann vollständig im Backend stattfinden.",
+      "remediation": "Prüfen, ob das Backend die Benutzeridentität selbst auswertet. Für benutzerbezogene Daten zusätzlich OAuth2 oder JWT verlangen.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "AnonymAPI 1.0",
+      "title": "Nur Anwendungs-Identifikation, keine Benutzer-Authentifizierung"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.no_traffic_limit",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "keine Traffic-Optimization-Policy (throttle)",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b5/API.b5"
+        }
+      ],
+      "id": "023e132ec9e2",
+      "method": null,
+      "owasp": "API4",
+      "reason": "Auf API-Ebene ist keine Traffic-Begrenzung konfiguriert. Eine global gesetzte Threat-Protection kann greifen — sie ist in diesem Export jedoch nicht enthalten und daher hier nicht nachweisbar.",
+      "remediation": "Eine Traffic-Monitoring-Policy je API setzen oder die globale Threat-Protection-Konfiguration mit exportieren und prüfen.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "OhneLimitAPI 1.0",
+      "title": "Keine Begrenzung von Anfragemenge oder Nachrichtengröße"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.pass_security_headers",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "passSecurityHeaders: true (http://intern.example/v1)",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4"
+        }
+      ],
+      "id": "fadb0c27e6c3",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Authorization- und weitere Security-Header des Aufrufers gehen unverändert an das Backend. Vertraut das Backend ihnen, entscheidet am Ende der Aufrufer über seine eigene Berechtigung.",
+      "remediation": "Prüfen, ob das Backend die durchgereichten Header auswertet. Wenn nicht benötigt, passSecurityHeaders abschalten.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "KlartextAPI 1.0",
+      "title": "Security-Header werden an das Backend durchgereicht"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.log_invocation",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "logInvocation",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b6/API.b6 → Log Invocation"
+        }
+      ],
+      "id": "128df275b173",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Anfragen werden protokolliert. Sind Nutzdaten eingeschlossen, landen personenbezogene Daten und Zugangsdaten in den Logs.",
+      "remediation": "Prüfen, welche Bestandteile protokolliert werden, und Nutzdaten nur mit dokumentiertem Zweck und Löschfrist aufzeichnen.",
+      "scope": "api",
+      "severity": "low",
+      "subject": "LogAPI 1.0",
+      "title": "Log-Invocation-Policy aktiv"
+    }
+  ],
+  "format": "wm-audit-bericht/1",
+  "laufzeit_luecken": [
+    {
+      "key": "key_verification",
+      "owasp": "API2",
+      "title": "Wird ein erfundener API-Key tatsächlich abgewiesen?",
+      "why": "Ob die Policy im Betrieb greift, zeigt erst eine Anfrage."
+    },
+    {
+      "key": "jwt_signature",
+      "owasp": "API2",
+      "title": "Wird die JWT-Signatur wirklich geprüft?",
+      "why": "Die Konfiguration nennt das Verfahren, nicht dessen Umsetzung."
+    },
+    {
+      "key": "object_authorization",
+      "owasp": "API1",
+      "title": "Erreicht ein Aufrufer fremde Objekte?",
+      "why": "Objektbezogene Berechtigung liegt im Backend und braucht zwei Identitäten."
+    },
+    {
+      "key": "role_enforcement",
+      "owasp": "API5",
+      "title": "Wird die Rollenprüfung durchgesetzt?",
+      "why": "Das Gateway identifiziert; autorisieren muss das Backend."
+    },
+    {
+      "key": "trust_header",
+      "owasp": "API2",
+      "title": "Lässt sich ein Trust-Header fälschen?",
+      "why": "Hängt davon ab, wie das Backend eingehende Header behandelt."
+    },
+    {
+      "key": "global_threat_protection",
+      "owasp": "API4",
+      "title": "Greift eine globale Threat-Protection?",
+      "why": "Globale Konfiguration liegt außerhalb des API-Exports."
+    },
+    {
+      "key": "security_headers",
+      "owasp": "API8",
+      "title": "Werden Security-Header in Antworten gesetzt?",
+      "why": "Antwort-Header stehen in keiner Konfigurationsdatei."
+    },
+    {
+      "key": "cors",
+      "owasp": "API8",
+      "title": "Wie verhält sich CORS tatsächlich?",
+      "why": "Erst eine Preflight-Anfrage zeigt die wirksame Regel."
+    }
+  ],
+  "quelle": {
+    "art": "verzeichnis",
+    "name": "fixtures",
+    "sha256": null
+  },
+  "uebersprungen": [
+    {
+      "grund": "nicht_zugeordnet",
+      "pfad": "echt/spec-http/API/API.c2/Policy/Policy.p-c2/PolicyAction/PolicyAction.c2-verwaist"
+    }
+  ],
+  "werkzeug": "wm-audit 0.2.0",
+  "zusammenfassung": {
+    "apis_eindeutig": 9,
+    "apis_gelesen": 9,
+    "befunde": 11,
+    "belegt": 7,
+    "gesperrt": 2,
+    "schwere": {
+      "critical": 1,
+      "high": 6,
+      "info": 0,
+      "low": 1,
+      "medium": 3
+    },
+    "uebersprungen": 1
+  }
+}
+</script>
+<script>
+"use strict";
+(function () {
+  // Alle Daten stammen aus dem geprüften Export und gelten als nicht vertrauenswürdig:
+  // sie werden ausschließlich als Text eingesetzt (textContent), nie als HTML.
+  var B = JSON.parse(document.getElementById("bericht").textContent);
+  var STUFEN = ["critical", "high", "medium", "low", "info"];
+
+  // Anleitungen je Regel. Menünamen und Verhalten nach der IBM-Dokumentation
+  // webMethods API Gateway 10.15 und 11.1; nicht Belegtes steht hier nicht.
+  var DOKU = "https://www.ibm.com/docs/en/wam/wm-api-gateway/11.1.0?topic=";
+  var AUFRUF = "curl -i http://<gateway-host>:5555/gateway/<API-Name>/<Version>/<Pfad>";
+  var HILFE = {
+    "gw.anonymous_allowed": {
+      aufgabe: "Anonymen Zugriff abschalten",
+      klartext: "Die API hat eine Identify-&-Authorize-Policy, aber die Option „Allow anonymous“ ist eingeschaltet.",
+      risiko: "Laut IBM-Dokumentation lässt das Gateway dann alle Anfragen zum Backend durch – auch nicht identifizierte. Sie laufen unter der Sammelanwendung „DefaultApplication“.",
+      schritte: [
+        "APIs (Titelleiste) → die betroffene API öffnen → Edit → Reiter Policies.",
+        "Im Policy catalog die Stufe „Identify & Access“ öffnen und die Policy „Identify & Authorize“ auswählen.",
+        "„Allow anonymous“ abwählen.",
+        "Save. Eine aktive API wird beim Speichern durch die geänderte Fassung ersetzt."
+      ],
+      pruefen: "Die API ohne API-Key bzw. Token aufrufen. Erwartet: Fehler 401 statt 200.",
+      befehl: AUFRUF,
+      doku: ["Identify & Authorize", "access-identify-authorize"]
+    },
+    "gw.no_identify_policy": {
+      aufgabe: "Identify & Authorize einrichten",
+      klartext: "Für diese API ist keine Identify-&-Authorize-Policy gesetzt. Das Gateway prüft nicht, wer anfragt.",
+      risiko: "Jede Anfrage geht an das Backend weiter; am Gateway findet keine Zugriffskontrolle statt.",
+      schritte: [
+        "APIs → API öffnen → Edit → Reiter Policies.",
+        "Im Policy catalog die Stufe „Identify & Access“ öffnen und bei „Identify & Authorize“ auf „+“ klicken.",
+        "Identification Type wählen, z. B. API Key oder JWT bzw. OAuth2 Token. „Allow anonymous“ nicht auswählen. Application Lookup condition: „Registered applications“.",
+        "Save.",
+        "Applications (Titelleiste) → Create application → unter APIs diese API hinzufügen → Save. Alternativ in der API: Edit → Reiter Applications."
+      ],
+      pruefen: "Ohne Schlüssel aufrufen: Fehler 401. Mit dem API-Key der registrierten Anwendung im Header x-Gateway-APIKey: Antwort 200.",
+      befehl: "curl -i -H 'x-Gateway-APIKey: <key>' http://<gateway-host>:5555/gateway/<API-Name>/<Version>/<Pfad>",
+      hinweis: "Ist die API bewusst öffentlich, dokumentieren Sie das und begrenzen Sie die Anfragemenge (Traffic Optimization).",
+      doku: ["Identify & Authorize", "access-identify-authorize"]
+    },
+    "gw.identify_or": {
+      aufgabe: "Alle Nachweise verlangen: AND statt OR",
+      klartext: "Mehrere Identifikationsverfahren sind mit OR verknüpft. Laut IBM-Dokumentation genügt dann eines davon.",
+      risiko: "Wo API-Key und Token gemeint waren, reicht der API-Key allein. Ein weitergegebener Key öffnet die API.",
+      schritte: [
+        "APIs → API öffnen → Edit → Policies → Stufe „Identify & Access“ → „Identify & Authorize“.",
+        "Condition von OR auf AND stellen.",
+        "Save."
+      ],
+      pruefen: "Nur mit API-Key aufrufen, ohne Token. Erwartet: Fehler 401.",
+      hinweis: "Ist OR gewollt, muss jedes Verfahren für sich allein ausreichen.",
+      doku: ["Identify & Authorize", "access-identify-authorize"]
+    },
+    "gw.http_allowed": {
+      aufgabe: "Nur HTTPS zulassen",
+      klartext: "Die Policy „Enable HTTP/HTTPS“ erlaubt HTTP. Laut IBM-Dokumentation ist HTTP dort voreingestellt.",
+      risiko: "API-Keys, Tokens und Nutzdaten gehen auf dem Weg zum Gateway unverschlüsselt durchs Netz.",
+      schritte: [
+        "APIs → API öffnen → Edit → Policies → Stufe „Transport“ → „Enable HTTP/HTTPS“.",
+        "Bei Protocol nur HTTPS auswählen.",
+        "Save."
+      ],
+      pruefen: "Über http:// aufrufen: darf nicht mehr mit 200 antworten. Über https:// funktioniert die API weiter.",
+      befehl: AUFRUF,
+      doku: ["Enable HTTP/HTTPS", "transport-enable-httphttps"]
+    },
+    "gw.plaintext_backend": {
+      aufgabe: "Backend über HTTPS anbinden",
+      klartext: "Das Gateway leitet Anfragen unverschlüsselt (http://) an das Backend weiter.",
+      risiko: "Zwischen Gateway und Backend laufen Daten im Klartext durchs interne Netz.",
+      schritte: [
+        "Steht in der Fundstelle „über Alias aufgelöst“: Menü-Icon in der Titelleiste → Aliases → den Alias öffnen und die Adresse auf https:// ändern.",
+        "Sonst: APIs → API öffnen → Edit → Policies → Stufe „Routing“ → „Straight Through Routing“ → Endpoint URI auf https:// ändern.",
+        "Zertifikat des Backends hinterlegen: Menü-Icon → Administration → Security → Keystore/Truststore → Truststores → Add truststore. Laut IBM-Dokumentation prüft das Gateway ohne Truststore die Zertifikate der Backends nicht.",
+        "Save."
+      ],
+      pruefen: "Ein normaler Aufruf funktioniert weiter. Danach den Export neu ziehen und wm-audit erneut laufen lassen.",
+      doku: ["Straight Through Routing", "routing-straight-through"]
+    },
+    "gw.application_identity_only": {
+      aufgabe: "Benutzer-Identität ergänzen oder Backend-Prüfung bestätigen",
+      klartext: "Identifiziert wird nur die aufrufende Anwendung (API Key, Hostname Address oder IP Address Range), nicht der Benutzer dahinter.",
+      risiko: "Für das Gateway sind alle Benutzer einer Anwendung gleich. Ob jemand fremde Daten abrufen kann (BOLA), entscheidet allein das Backend.",
+      schritte: [
+        "Mit dem Backend-Team klären, ob das Backend jeden Zugriff dem angemeldeten Benutzer zuordnet und prüft.",
+        "Wenn nicht: in „Identify & Authorize“ zusätzlich JWT oder OAuth2 Token als Identification Type aufnehmen und Condition auf AND stellen."
+      ],
+      pruefen: "Mit zwei Benutzern derselben Anwendung testen, ob einer die Daten des anderen sieht. Genau das testet sectestx automatisch.",
+      doku: ["Identify & Authorize", "access-identify-authorize"]
+    },
+    "gw.pass_security_headers": {
+      aufgabe: "Weitergabe der Security-Header klären",
+      klartext: "Im Export ist für den Native Endpoint „passSecurityHeaders“ gesetzt.",
+      risiko: "Kommen die Authorization-Header des Aufrufers beim Backend an und vertraut das Backend ihnen blind, entscheidet der Aufrufer über seine eigene Berechtigung.",
+      schritte: [
+        "Bei einem Testaufruf im Backend-Log nachsehen, ob Authorization-Header ankommen. Laut IBM-Dokumentation entfernt das Gateway bereits geprüfte Zugangsdaten, wenn keine Outbound-Authentifizierung konfiguriert ist.",
+        "Kommen sie an und braucht das Backend sie nicht: Weitergabe abstellen. Bei Endpoint-Aliasen heißt die Option „Pass WS-Security Headers“.",
+        "Braucht das Backend sie: sicherstellen, dass es Signatur und Gültigkeit selbst prüft."
+      ],
+      pruefen: "Ergebnis der Klärung dokumentieren; nach einer Änderung den Export neu prüfen.",
+      doku: ["Straight Through Routing", "routing-straight-through"]
+    },
+    "gw.no_traffic_limit": {
+      aufgabe: "Anfragemenge begrenzen (Traffic Optimization)",
+      klartext: "Für diese API ist keine Traffic-Optimization-Policy gesetzt.",
+      risiko: "Ein fehlerhafter Client oder ein Angriff kann das Backend mit Anfragen überlasten.",
+      schritte: [
+        "APIs → API öffnen → Edit → Policies → Stufe „Traffic Monitoring“ → bei „Traffic Optimization“ auf „+“ klicken.",
+        "Value (maximale Anfragen) sowie Alert Interval und Unit festlegen. Bei Consumer Applications z. B. „Each consumer“, damit jede Anwendung ein eigenes Limit hat.",
+        "Save.",
+        "Zusätzlich prüfen, ob eine globale Schutzregel aktiv ist: Policies (Titelleiste) → Threat protection → Global denial of service. Laut IBM-Dokumentation gilt sie für Anfragen über den External Port."
+      ],
+      pruefen: "Mehr Anfragen senden als erlaubt. Erwartet: Anfragen über dem Limit werden abgelehnt.",
+      doku: ["Traffic Optimization", "monitoring-traffic-optimization"]
+    },
+    "gw.log_invocation": {
+      aufgabe: "Protokollierte Inhalte prüfen",
+      klartext: "Die Policy „Log Invocation“ protokolliert Aufrufe dieser API.",
+      risiko: "Sind „Store Request Payload“ oder „Store Response Payload“ eingeschaltet, landen Nutzdaten – oft personenbezogen – in den Logs.",
+      schritte: [
+        "APIs → API öffnen → Edit → Policies → Stufe „Traffic Monitoring“ → „Log Invocation“.",
+        "Nur auswählen, was gebraucht wird. „Store Request Payload“ und „Store Response Payload“ nur mit dokumentiertem Zweck.",
+        "Sensible Felder maskieren: Policy „Data Masking“ in der Stufe „Request Processing“. Sie kann laut IBM-Dokumentation Maskierung auf Transaktionslogs anwenden.",
+        "Aufbewahrungsdauer der Log-Ablage festlegen."
+      ],
+      pruefen: "Testaufruf mit Testdaten, danach im Log nachsehen, was gespeichert wurde.",
+      doku: ["Log Invocation", "monitoring-log-invocation"]
+    }
+  };
+  var GRUND = {
+    zu_gross: ["größer als die Grenze je Datei", "Prüfen, ob der Export vollständig und korrekt erstellt wurde."],
+    kein_utf8: ["kein gültiges UTF-8", "Export erneut erstellen; die Datei ist beschädigt."],
+    zu_tief: ["JSON zu tief verschachtelt", "Datei prüfen; so tiefe Strukturen erzeugt das Gateway üblicherweise nicht."],
+    kein_json: ["kein gültiges JSON", "Export erneut erstellen; die Datei ist beschädigt oder unvollständig."],
+    kein_objekt: ["JSON ist kein Objekt", "Export erneut erstellen."],
+    ohne_apiname: ["API-Datei ohne apiName", "Export erneut erstellen (APIs → Export)."],
+    ohne_api: ["Policy-Aktion ohne zugehörige API", "Export ist unvollständig – die API erneut exportieren."],
+    nicht_zugeordnet: ["keiner Stage zugeordnet – greift im Gateway nicht", "Prüfen, ob die Policy bewusst entfernt wurde. Soll sie wirken: API → Edit → Policies und die Policy wieder hinzufügen."],
+    lesefehler: ["nicht lesbar (verschlüsselt, Prüfsumme oder Kompression)", "Export ohne Verschlüsselung erneut erstellen."],
+    symlink: ["Symlink – wird nicht verfolgt", "Export als ZIP-Datei übergeben."]
+  };
+  var LUECKE_PRUEFEN = {
+    key_verification: "Mit einem erfundenen Wert im Header x-Gateway-APIKey aufrufen. Erwartet: Fehler 401.",
+    jwt_signature: "Ein gültiges JWT nehmen, ein Zeichen der Signatur ändern und erneut aufrufen. Erwartet: Ablehnung.",
+    object_authorization: "Als Benutzer B ein Objekt von Benutzer A abrufen. Erwartet: Ablehnung. sectestx testet das automatisch.",
+    role_enforcement: "Mit einem Benutzer ohne Admin-Rolle eine Admin-Funktion aufrufen. Erwartet: Ablehnung.",
+    trust_header: "Interne Header wie X-User-Id selbst mitschicken. Erwartet: Das Backend ignoriert sie.",
+    global_threat_protection: "Policies (Titelleiste) → Threat protection: Ist „Global denial of service“ eingeschaltet?",
+    security_headers: "Antwort-Header eines Aufrufs ansehen (curl -I), z. B. Strict-Transport-Security und X-Content-Type-Options.",
+    cors: "Preflight-Anfrage (OPTIONS) mit fremdem Origin senden. Erwartet: keine Freigabe für fremde Domains."
+  };
+
+  function el(tag, klasse, text) {
+    var e = document.createElement(tag);
+    if (klasse) e.className = klasse;
+    if (text !== undefined && text !== null) e.textContent = String(text);
+    return e;
+  }
+  function an(eltern) {
+    for (var i = 1; i < arguments.length; i++) if (arguments[i]) eltern.appendChild(arguments[i]);
+    return eltern;
+  }
+  function link(text, ziel, extern) {
+    var a = el("a", null, text);
+    a.setAttribute("href", ziel);
+    if (extern) { a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener noreferrer"); }
+    return a;
+  }
+  function farbe(stufe) { return "var(--" + (STUFEN.indexOf(stufe) >= 0 ? stufe : "info") + ")"; }
+  function sofort(f) { return f.bewertet && (f.severity === "critical" || f.severity === "high"); }
+
+  var seite = document.getElementById("seite");
+  var q = B.quelle || {}, z = B.zusammenfassung || {}, schwere = z.schwere || {};
+  var befunde = B.befunde || [];
+  document.title = "wm-audit · " + (q.name || "Prüfbericht");
+
+  // ---------------------------------------------------------------- Kopf
+  var kopf = el("header", "kopf");
+  var links = el("div");
+  an(links, el("div", "marke", (B.werkzeug || "wm-audit") + " · Prüfbericht"),
+     el("h1", null, "webMethods API Gateway"));
+  var quelle = el("div", "quelle");
+  an(quelle, document.createTextNode("Geprüft: "), el("b", null, q.name || "–"),
+     document.createTextNode(q.art === "zip" ? " (ZIP-Datei)" : q.art === "verzeichnis" ? " (Ordner)" : ""));
+  an(links, quelle);
+  if (q.sha256) an(links, el("div", "sha", "SHA-256 " + q.sha256));
+  an(kopf, links, el("div", "offline", "Offline erstellt · ohne Netzwerk"));
+  an(seite, kopf);
+
+  // ---------------------------------------------------------------- Kacheln
+  var kacheln = el("div", "kacheln");
+  function kachel(wert, titel, text, zusatz) {
+    var k = el("div", "kachel");
+    an(k, el("div", "kachel-w", wert), el("div", "kachel-t", titel), el("div", "kachel-x", text), zusatz);
+    return k;
+  }
+  var balken = el("div", "balken");
+  var gesamt = z.befunde || 0;
+  STUFEN.forEach(function (s) {
+    var n = schwere[s] || 0;
+    if (!n || !gesamt) return;
+    var t = el("span");
+    t.style.width = (100 * n / gesamt) + "%";
+    t.style.background = farbe(s);
+    t.title = s.toUpperCase() + ": " + n;
+    balken.appendChild(t);
+  });
+  an(kacheln,
+    kachel(z.apis_gelesen || 0, "APIs gelesen", (z.apis_eindeutig || 0) + " eindeutig nach Name und Version"),
+    kachel(gesamt, "Befunde", (z.belegt || 0) + " belegt, " + (gesamt - (z.belegt || 0)) + " Hinweise", balken),
+    kachel(z.gesperrt || 0, "nicht geöffnet", "Einträge mit Zugangsdaten (PassmanData, Keystore …) – nur gezählt"),
+    kachel(z.uebersprungen || 0, "übersprungen", "Dateien, die nicht ausgewertet werden konnten – mit Grund unten"));
+  an(seite, kacheln);
+
+  // ---------------------------------------------------------------- Aufgaben
+  var aufgabenSofort = [], aufgabenPruefen = [];
+  befunde.forEach(function (f, i) { (sofort(f) ? aufgabenSofort : aufgabenPruefen).push([f, i]); });
+  an(seite, el("h2", null, "Ihre Aufgaben"));
+  if (!befunde.length) {
+    an(seite, el("div", "leer gut", "Keine Aufgaben – die geprüften Regeln haben nichts gefunden."));
+  } else {
+    an(seite, el("p", "abschnitt-x", aufgabenSofort.length + " Aufgaben sollten Sie sofort erledigen, " +
+       aufgabenPruefen.length + " prüfen und entscheiden. Zu jeder Aufgabe gibt es weiter unten eine Anleitung."));
+    var raster = el("div", "aufgaben");
+    function gruppe(klasse, titel, text, eintraege) {
+      var g = el("div", "gruppe " + klasse);
+      an(g, el("div", "gruppe-t", titel + " (" + eintraege.length + ")"), el("div", "gruppe-x", text));
+      if (!eintraege.length) an(g, el("div", "aufgabe-a", "Nichts zu tun."));
+      eintraege.forEach(function (paar) {
+        var f = paar[0], hilfe = HILFE[f.check_id] || {};
+        var zeile = el("label", "aufgabe");
+        var box = el("input");
+        box.type = "checkbox";
+        var text = el("div");
+        an(text, el("div", "aufgabe-t", hilfe.aufgabe || f.title), el("div", "aufgabe-a", f.subject));
+        an(zeile, box, text, link("Anleitung →", "#befund-" + paar[1]));
+        an(g, zeile);
+      });
+      return g;
+    }
+    an(raster,
+      gruppe("sofort", "Sofort beheben", "Belegt und schwer: direkt aus der Konfiguration abgelesen.", aufgabenSofort),
+      gruppe("pruefen", "Prüfen und entscheiden", "Hinweise und geringere Schwere: klären, ob Handlungsbedarf besteht.", aufgabenPruefen));
+    an(seite, raster);
+    an(seite, el("div", "hinweis-allg",
+      "Am besten zuerst in der Test-Umgebung ändern. Laut IBM-Dokumentation lassen sich aktive APIs bearbeiten; beim Speichern wird die aktive API durch die geänderte Fassung ersetzt. " +
+      "Danach den Export neu ziehen und wm-audit erneut laufen lassen. Menünamen nach IBM-Dokumentation webMethods API Gateway 10.15/11.1."));
+  }
+
+  // ---------------------------------------------------------------- Befunde
+  an(seite, el("h2", null, "Befunde und Anleitungen"),
+     el("p", "abschnitt-x", "Belegt: direkt aus der Konfiguration abgelesen, fließt in die Bewertung ein. Hinweis: starkes Anzeichen, aber statisch nicht abschließend entscheidbar."));
+
+  var filter = el("div", "filter");
+  var auswahl = "alle", nurBelegt = false;
+  var knoepfe = [];
+  function knopf(wert, text, anzahl) {
+    var b = el("button", "chip", text);
+    b.type = "button";
+    if (anzahl !== undefined) an(b, el("span", "zahl", anzahl));
+    b.setAttribute("aria-pressed", wert === auswahl ? "true" : "false");
+    b.addEventListener("click", function () {
+      auswahl = wert;
+      knoepfe.forEach(function (k) { k.b.setAttribute("aria-pressed", k.w === auswahl ? "true" : "false"); });
+      zeigen();
+    });
+    knoepfe.push({ b: b, w: wert });
+    return b;
+  }
+  an(filter, knopf("alle", "Alle", gesamt));
+  STUFEN.forEach(function (s) { if (schwere[s]) an(filter, knopf(s, s, schwere[s])); });
+  var schalter = el("label", "schalter");
+  var nurBox = el("input");
+  nurBox.type = "checkbox";
+  nurBox.addEventListener("change", function () { nurBelegt = nurBox.checked; zeigen(); });
+  an(schalter, nurBox, document.createTextNode("nur belegte"));
+  an(filter, schalter);
+  an(seite, filter);
+
+  var liste = el("div");
+  an(seite, liste);
+
+  function block(titel, inhalt) {
+    var b = el("div", "block");
+    an(b, el("div", "block-t", titel), inhalt);
+    return b;
+  }
+
+  function befundKarte(f, i) {
+    var hilfe = HILFE[f.check_id];
+    var karte = el("article", "befund");
+    karte.id = "befund-" + i;
+    karte.style.setProperty("--farbe", farbe(f.severity));
+    var kz = el("div", "befund-kopf");
+    an(kz, el("span", "stufe", String(f.severity || "").toUpperCase()),
+       el("span", "marker" + (f.bewertet ? " belegt" : ""), f.bewertet ? "belegt" : "Hinweis"),
+       f.owasp ? el("span", "marker", "OWASP " + f.owasp) : null,
+       el("span", "regel", f.check_id));
+    an(karte, kz, el("h3", null, hilfe ? hilfe.aufgabe : f.title));
+    var betrifft = el("div", "betrifft");
+    an(betrifft, document.createTextNode("Betrifft: "), el("b", null, f.subject));
+    an(karte, betrifft);
+    if (f.affected && f.affected.length) {
+      var d = el("details", "liste");
+      an(d, el("summary", null, f.affected.length + " betroffene APIs anzeigen"));
+      var ul = el("ul");
+      f.affected.forEach(function (a) { an(ul, el("li", null, a)); });
+      an(karte, an(d, ul));
+    }
+    if (hilfe) {
+      var spalten = el("div", "zwei-spalten");
+      an(spalten, block("Was bedeutet das?", el("div", null, hilfe.klartext)),
+         block("Was kann passieren?", el("div", null, hilfe.risiko)));
+      an(karte, spalten);
+      var ol = el("ol");
+      hilfe.schritte.forEach(function (s) { an(ol, el("li", null, s)); });
+      an(karte, block("So beheben Sie es im API Gateway", ol));
+      if (hilfe.hinweis) an(karte, el("div", "hinweis-allg", hilfe.hinweis));
+      var pruef = el("div");
+      an(pruef, el("div", null, hilfe.pruefen), hilfe.befehl ? el("div", "befehl", hilfe.befehl) : null);
+      an(karte, block("So prüfen Sie den Erfolg", pruef));
+      if (hilfe.doku) {
+        var quelleDoku = el("div", "block");
+        an(quelleDoku, link("IBM-Dokumentation: " + hilfe.doku[0] + " ↗", DOKU + hilfe.doku[1], true));
+        an(karte, quelleDoku);
+      }
+    } else if (f.remediation) {
+      an(karte, el("p", null, f.reason), el("div", "empfehlung", f.remediation));
+    }
+    var technik = el("details", "technik");
+    an(technik, el("summary", null, "Technische Details"));
+    an(technik, el("p", null, f.reason));
+    (f.evidence || []).forEach(function (e) {
+      var beleg = el("div", "beleg");
+      [["Fundstelle", e.pointer], ["Auszug", e.excerpt], ["Notiz", e.note]].forEach(function (p) {
+        if (!p[1]) return;
+        var zeile = el("div");
+        an(zeile, el("span", "k", p[0]), el("span", "v", p[1]));
+        an(beleg, zeile);
+      });
+      an(technik, beleg);
+    });
+    an(karte, technik);
+    return karte;
+  }
+
+  function zeigen() {
+    liste.textContent = "";
+    if (!befunde.length) {
+      an(liste, el("div", "leer gut", "Keine Befunde – die geprüften Regeln haben nichts gefunden."));
+      return;
+    }
+    var treffer = 0;
+    befunde.forEach(function (f, i) {
+      if ((auswahl === "alle" || f.severity === auswahl) && (!nurBelegt || f.bewertet)) {
+        an(liste, befundKarte(f, i));
+        treffer++;
+      }
+    });
+    if (!treffer) an(liste, el("div", "leer", "Keine Befunde für diese Auswahl."));
+  }
+  zeigen();
+
+  // ---------------------------------------------------------------- APIs
+  if ((B.apis || []).length) {
+    an(seite, el("h2", null, "Gelesene APIs"),
+       el("p", "abschnitt-x", "Mit den Policies, die im Gateway zugeordnet sind und deshalb ausgewertet wurden."));
+    var t = el("table");
+    var kopfzeile = el("tr");
+    ["API", "Policies", "Fundstelle im Export"].forEach(function (h) { an(kopfzeile, el("th", null, h)); });
+    an(t, an(el("thead"), kopfzeile));
+    var tb = el("tbody");
+    B.apis.forEach(function (a) {
+      var zeile = el("tr");
+      var pol = el("td");
+      if ((a.policies || []).length) a.policies.forEach(function (p) { an(pol, el("span", "pol", p)); });
+      else an(pol, el("span", "leise", "keine"));
+      an(zeile, el("td", null, a.label || "–"), pol, el("td", "pfad", a.pfad));
+      an(tb, zeile);
+    });
+    an(seite, an(t, tb));
+  }
+
+  // ---------------------------------------------------------------- Übersprungen
+  if ((B.uebersprungen || []).length) {
+    an(seite, el("h2", null, "Übersprungene Dateien"),
+       el("p", "abschnitt-x", "Diese Dateien sahen wie Assets aus, wurden aber nicht ausgewertet. Ein Werkzeug, das sagt, was es nicht gelesen hat, ist überprüfbar."));
+    var t2 = el("table");
+    var kz2 = el("tr");
+    ["Grund", "Datei", "Was tun?"].forEach(function (h) { an(kz2, el("th", null, h)); });
+    an(t2, an(el("thead"), kz2));
+    var tb2 = el("tbody");
+    B.uebersprungen.forEach(function (u) {
+      var g = GRUND[u.grund] || [u.grund, ""];
+      var zeile = el("tr");
+      an(zeile, el("td", null, g[0]), el("td", "pfad", u.pfad), el("td", "tun", g[1]));
+      an(tb2, zeile);
+    });
+    an(seite, an(t2, tb2));
+  }
+
+  // ---------------------------------------------------------------- Laufzeitlücken
+  if ((B.laufzeit_luecken || []).length) {
+    an(seite, el("h2", null, "Statisch nicht prüfbar"),
+       el("p", "abschnitt-x", "Was auch die Konfiguration nicht beantwortet. Benannt, nie bewertet – das zeigt erst ein Test gegen die laufende API. sectestx testet diese Fragen live in Ihrer Testumgebung."));
+    var gl = el("div", "luecken");
+    B.laufzeit_luecken.forEach(function (l) {
+      var k = el("div", "luecke");
+      an(k, el("div", "luecke-t", l.title), el("div", "luecke-x", l.why),
+         LUECKE_PRUEFEN[l.key] ? el("div", "luecke-tun", LUECKE_PRUEFEN[l.key]) : null,
+         l.owasp ? el("span", "marker", "OWASP " + l.owasp) : null);
+      an(gl, k);
+    });
+    an(seite, gl);
+  }
+
+  // ---------------------------------------------------------------- Fuß
+  var fuss = el("footer");
+  an(fuss, el("span", null, "Erstellt mit " + (B.werkzeug || "wm-audit") + " · statische Analyse, keine Anfrage an die APIs"),
+     el("span", "mono", "Format " + (B.format || "") + " · Rohdaten als JSON im Quelltext dieser Datei"));
+  an(seite, fuss);
+})();
+</script>
+</body>
+</html>

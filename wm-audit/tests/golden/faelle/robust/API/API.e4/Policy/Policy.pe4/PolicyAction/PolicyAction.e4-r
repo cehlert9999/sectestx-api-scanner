@@ -1,0 +1,19 @@
+{
+ "id": "e4-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${Dup}"
+   ]
+  }
+ ],
+ "active": false
+}

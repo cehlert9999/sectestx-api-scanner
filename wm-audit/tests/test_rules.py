@@ -1,9 +1,12 @@
 """Regeln gegen konstruierte Fixtures mit bekannter Erwartung.
 
 Der Satz ist bewusst klein und vollständig kontrolliert: jede API enthält genau
-einen eingebauten Fehler, plus eine korrekt konfigurierte Referenz. Damit prüft
-jeder Test beides — dass die Regel greift, wo sie soll, und dass sie schweigt,
-wo nichts ist.
+die eingebauten Fehler aus ``erwartung.json``, plus eine korrekt konfigurierte
+Referenz. Damit prüft jeder Test beides — dass die Regel greift, wo sie soll,
+und dass sie schweigt, wo nichts ist.
+
+``fixtures/echt/`` bildet die Struktur echter Exporte nach (Policy mit
+``policyEnforcements``, Routing über Alias, Wahrheitswerte als Text).
 """
 
 from __future__ import annotations
@@ -13,17 +16,11 @@ from pathlib import Path
 
 import pytest
 
-from wm_audit import read_directory, run_rules
+from wm_audit import als_json, bericht, read_directory, run_rules
+from wm_audit.rules import _REGELN
 
 FIXTURES = Path(__file__).parent / "fixtures"
 ERWARTUNG = json.loads((FIXTURES / "erwartung.json").read_text(encoding="utf-8"))
-
-
-@pytest.fixture(scope="module")
-def befunde():
-    export = read_directory(FIXTURES)
-    return {f.subject: {x.check_id for x in run_rules(export) if x.subject == f.subject}
-            for f in run_rules(export)}
 
 
 @pytest.fixture(scope="module")
@@ -33,10 +30,21 @@ def export():
 
 @pytest.mark.parametrize("fall", ERWARTUNG["faelle"], ids=lambda f: f["api"])
 def test_erwartete_befunde(fall, export):
-    gefunden = {f.check_id for f in run_rules(export) if f.subject == fall["api"]}
+    """Genau die erwarteten Befunde — nicht mehr und nicht weniger."""
+    gefunden = {f.check_id for f in run_rules(export)
+                if f.subject == fall["api"] and not f.aggregate_count}
     erwartet = set(fall["erwartet"])
-    fehlend = erwartet - gefunden
-    assert not fehlend, f"{fall['api']}: nicht erkannt {fehlend} ({fall['warum']})"
+    assert gefunden == erwartet, (
+        f"{fall['api']}: nicht erkannt {erwartet - gefunden}, "
+        f"zusätzlich {gefunden - erwartet} ({fall['warum']})"
+    )
+
+
+def test_jede_regel_hat_einen_positiven_fall():
+    erwartet = {c for fall in ERWARTUNG["faelle"] for c in fall["erwartet"]}
+    ids = {f.check_id for f in run_rules(read_directory(FIXTURES))}
+    assert len(erwartet) == len(_REGELN), "jede Regel braucht mindestens ein Fixture"
+    assert erwartet <= ids
 
 
 def test_saubere_api_erzeugt_keinen_befund(export):
@@ -87,8 +95,25 @@ def test_reader_liest_eingebettete_spec(export):
     assert "paths" in api.api_definition
 
 
-def test_geheimnisse_werden_nicht_eingelesen():
-    """PassmanData und Keystores dürfen nie im Speicher landen."""
-    from wm_audit.reader import GESPERRTE_ASSETS
-    assert "PassmanData" in GESPERRTE_ASSETS
-    assert "Keystore" in GESPERRTE_ASSETS
+def test_geheimnisse_werden_nicht_eingelesen(export):
+    """PassmanData und Truststore liegen als Kanarienvögel in den Fixtures.
+
+    Würden sie gelesen, entstünde eine API ``GEHEIM-KANARIE-PASSMAN`` bzw. eine
+    Identify-Policy mit ``allowAnonymous`` — beides darf es nicht geben.
+    """
+    text = als_json(bericht(export))
+    assert "GEHEIM-KANARIE" not in text
+    assert export.gesperrt == 2
+    assert not any(a.name.startswith("GEHEIM") for a in export.apis)
+
+
+def test_zugangsdaten_aus_alias_url_erscheinen_nicht(export):
+    text = als_json(bericht(export))
+    assert "svc-user" not in text
+    assert "http://***@backend.intern:8080" in text
+
+
+def test_nicht_zugeordnete_aktion_wird_ausgewiesen(export):
+    assert [(u.grund, u.pfad.rsplit("/", 1)[-1]) for u in export.uebersprungen] == [
+        ("nicht_zugeordnet", "PolicyAction.c2-verwaist"),
+    ]

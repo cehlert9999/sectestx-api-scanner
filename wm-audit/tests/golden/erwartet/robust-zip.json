@@ -1,0 +1,1036 @@
+{
+  "apis": [
+    {
+      "id": "",
+      "label": "E10 1.0",
+      "name": "E10",
+      "pfad": "API/API.e10/API.e10",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E2 1.0",
+      "name": "E2",
+      "pfad": "API/API.e2/API.e2",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E3 1.0",
+      "name": "E3",
+      "pfad": "API/API.e3/API.e3",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E4 1.0",
+      "name": "E4",
+      "pfad": "API/API.e4/API.e4",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E5 1.0",
+      "name": "E5",
+      "pfad": "API/API.e5/API.e5",
+      "policies": [
+        "contentBasedRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E6 1.0",
+      "name": "E6",
+      "pfad": "API/API.e6/API.e6",
+      "policies": [],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E7 1.0",
+      "name": "E7",
+      "pfad": "API/API.e7/API.e7",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E8 1.0",
+      "name": "E8",
+      "pfad": "API/API.e8/API.e8",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E9 1.0",
+      "name": "E9",
+      "pfad": "API/API.e9/API.e9",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "PX nicht gesperrt",
+      "name": "PX nicht gesperrt",
+      "pfad": "PassmanDataX/API.px/API.px",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "Aussen 1.0",
+      "name": "Aussen",
+      "pfad": "assets/API/API.aussen/API.aussen",
+      "policies": [],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "Innen 1.0",
+      "name": "Innen",
+      "pfad": "assets/API/API.aussen/unter/API.innen/API.innen",
+      "policies": [
+        "evaluatePolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "K11",
+      "name": "K11",
+      "pfad": "assets/API/API.k11/API.k11",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K12",
+      "name": "K12",
+      "pfad": "assets/API/API.k12/API.k12",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K16",
+      "name": "K16",
+      "pfad": "assets/API/API.k16/API.k16",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K18",
+      "name": "K18",
+      "pfad": "assets/API/API.k18/API.k18",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "5",
+      "name": "5",
+      "pfad": "assets/API/API.k19/API.k19",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K20",
+      "name": "K20",
+      "pfad": "assets/API/API.k20/API.k20",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K27",
+      "name": "K27",
+      "pfad": "assets/API/API.k27/API.k27",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "K30",
+      "name": "K30",
+      "pfad": "assets/API/API.k30/API.k30",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "N1 1.0",
+      "name": "N1",
+      "pfad": "assets/API/API.n1/API.n1",
+      "policies": [
+        "evaluatePolicy",
+        "throttle"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "N2 1.0",
+      "name": "N2",
+      "pfad": "assets/API/API.n2/API.n2",
+      "policies": [
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "R1 2",
+      "name": "R1",
+      "pfad": "assets/API/API.r1/API.r1",
+      "policies": [
+        "entryProtocolPolicy",
+        "evaluatePolicy"
+      ],
+      "version": "2"
+    },
+    {
+      "id": "",
+      "label": "R10",
+      "name": "R10",
+      "pfad": "assets/API/API.r10/API.r10",
+      "policies": [],
+      "version": ""
+    },
+    {
+      "id": "",
+      "label": "R11 18446744073709551615",
+      "name": "R11",
+      "pfad": "assets/API/API.r11/API.r11",
+      "policies": [],
+      "version": "18446744073709551615"
+    },
+    {
+      "id": "",
+      "label": "R12 -9223372036854775808",
+      "name": "R12",
+      "pfad": "assets/API/API.r12/API.r12",
+      "policies": [],
+      "version": "-9223372036854775808"
+    },
+    {
+      "id": "",
+      "label": "R13 100.0",
+      "name": "R13",
+      "pfad": "assets/API/API.r13/API.r13",
+      "policies": [],
+      "version": "100.0"
+    },
+    {
+      "id": "",
+      "label": "R14 100.0",
+      "name": "R14",
+      "pfad": "assets/API/API.r14/API.r14",
+      "policies": [],
+      "version": "100.0"
+    },
+    {
+      "id": "",
+      "label": "R15 1",
+      "name": "R15",
+      "pfad": "assets/API/API.r15/API.r15",
+      "policies": [],
+      "version": "1"
+    },
+    {
+      "id": "",
+      "label": "Zählerstände 🔌 β",
+      "name": "Zählerstände 🔌",
+      "pfad": "assets/API/API.r16/API.r16",
+      "policies": [],
+      "version": "β"
+    },
+    {
+      "id": "",
+      "label": "R17 1e-05",
+      "name": "R17",
+      "pfad": "assets/API/API.r17/API.r17",
+      "policies": [],
+      "version": "1e-05"
+    },
+    {
+      "id": "",
+      "label": "R18 1.8446744073709552e+19",
+      "name": "R18",
+      "pfad": "assets/API/API.r18/API.r18",
+      "policies": [],
+      "version": "1.8446744073709552e+19"
+    },
+    {
+      "id": "",
+      "label": "R19 -9.223372036854776e+18",
+      "name": "R19",
+      "pfad": "assets/API/API.r19/API.r19",
+      "policies": [],
+      "version": "-9.223372036854776e+18"
+    },
+    {
+      "id": "",
+      "label": "R2 1.5",
+      "name": "R2",
+      "pfad": "assets/API/API.r2/API.r2",
+      "policies": [],
+      "version": "1.5"
+    },
+    {
+      "id": "",
+      "label": "R20 123456789.125",
+      "name": "R20",
+      "pfad": "assets/API/API.r20/API.r20",
+      "policies": [],
+      "version": "123456789.125"
+    },
+    {
+      "id": "",
+      "label": "R21 1e-07",
+      "name": "R21",
+      "pfad": "assets/API/API.r21/API.r21",
+      "policies": [],
+      "version": "1e-07"
+    },
+    {
+      "id": "",
+      "label": "R22 9007199254740992.0",
+      "name": "R22",
+      "pfad": "assets/API/API.r22/API.r22",
+      "policies": [],
+      "version": "9007199254740992.0"
+    },
+    {
+      "id": "",
+      "label": "R23 1.0",
+      "name": "R23",
+      "pfad": "assets/API/API.r23/API.r23",
+      "policies": [],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "R24 5e-324",
+      "name": "R24",
+      "pfad": "assets/API/API.r24/API.r24",
+      "policies": [],
+      "version": "5e-324"
+    },
+    {
+      "id": "",
+      "label": "R25 1.7976931348623157e+308",
+      "name": "R25",
+      "pfad": "assets/API/API.r25/API.r25",
+      "policies": [],
+      "version": "1.7976931348623157e+308"
+    },
+    {
+      "id": "",
+      "label": "R26 -0.0",
+      "name": "R26",
+      "pfad": "assets/API/API.r26/API.r26",
+      "policies": [],
+      "version": "-0.0"
+    },
+    {
+      "id": "",
+      "label": "R27 0.30000000000000004",
+      "name": "R27",
+      "pfad": "assets/API/API.r27/API.r27",
+      "policies": [],
+      "version": "0.30000000000000004"
+    },
+    {
+      "id": "",
+      "label": "R3 1e+16",
+      "name": "R3",
+      "pfad": "assets/API/API.r3/API.r3",
+      "policies": [],
+      "version": "1e+16"
+    },
+    {
+      "id": "",
+      "label": "R4 0.0001",
+      "name": "R4",
+      "pfad": "assets/API/API.r4/API.r4",
+      "policies": [],
+      "version": "0.0001"
+    },
+    {
+      "id": "",
+      "label": "R5 1e-05",
+      "name": "R5",
+      "pfad": "assets/API/API.r5/API.r5",
+      "policies": [],
+      "version": "1e-05"
+    },
+    {
+      "id": "",
+      "label": "R6 -0.0",
+      "name": "R6",
+      "pfad": "assets/API/API.r6/API.r6",
+      "policies": [],
+      "version": "-0.0"
+    },
+    {
+      "id": "",
+      "label": "R7 1.2345678901234568e+22",
+      "name": "R7",
+      "pfad": "assets/API/API.r7/API.r7",
+      "policies": [],
+      "version": "1.2345678901234568e+22"
+    },
+    {
+      "id": "",
+      "label": "R8",
+      "name": "R8",
+      "pfad": "assets/API/API.r8/API.r8",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "R9 true",
+      "name": "R9",
+      "pfad": "assets/API/API.r9/API.r9",
+      "policies": [],
+      "version": "true"
+    },
+    {
+      "id": "",
+      "label": "D1 1.0",
+      "name": "D1",
+      "pfad": "dot/API/API.d1/API.d1",
+      "policies": [],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "E1 1.0",
+      "name": "E1",
+      "pfad": "env/API/API.e1/API.e1",
+      "policies": [
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "G2",
+      "name": "G2",
+      "pfad": "gross/API/API.g2/API.g2",
+      "policies": [],
+      "version": null
+    },
+    {
+      "id": "",
+      "label": "W1 1.0",
+      "name": "W1",
+      "pfad": "win/API/API.w1/API.w1",
+      "policies": [],
+      "version": "1.0"
+    }
+  ],
+  "befunde": [
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.anonymous_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "allowAnonymous: true",
+          "note": "",
+          "pointer": "assets/API/API.r1/API.r1 → "
+        }
+      ],
+      "id": "520810681c4d",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Identify-and-Authorize-Policy ist konfiguriert, lässt über allowAnonymous aber Anfragen ohne Identifikation durch. Die Policy sieht in der Oberfläche vorhanden aus und greift trotzdem nicht.",
+      "remediation": "allowAnonymous auf false setzen.",
+      "scope": "api",
+      "severity": "critical",
+      "subject": "R1 2",
+      "title": "Identify-Policy erlaubt anonymen Zugriff"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.http_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "protocol: http",
+          "note": "",
+          "pointer": "assets/API/API.n2/API.n2 → Protocol"
+        }
+      ],
+      "id": "39e45cd08ad1",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Die Entry-Protocol-Policy lässt HTTP zu. Zugangsdaten und Nutzdaten sind auf dem Weg zum Gateway mitlesbar.",
+      "remediation": "Nur HTTPS zulassen und HTTP an der Kante umleiten oder abweisen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "N2 1.0",
+      "title": "Gateway akzeptiert unverschlüsseltes HTTP"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.http_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "protocol: http",
+          "note": "",
+          "pointer": "assets/API/API.r1/API.r1 → Aktion"
+        }
+      ],
+      "id": "a5231a7612af",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Die Entry-Protocol-Policy lässt HTTP zu. Zugangsdaten und Nutzdaten sind auf dem Weg zum Gateway mitlesbar.",
+      "remediation": "Nur HTTPS zulassen und HTTP an der Kante umleiten oder abweisen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "R1 2",
+      "title": "Gateway akzeptiert unverschlüsseltes HTTP"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.identify_or",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "logicalConnector: OR, identificationType: apiKey, hostName, 7",
+          "note": "",
+          "pointer": "assets/API/API.r1/API.r1 → "
+        }
+      ],
+      "id": "3d77e0bd74e2",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Policy akzeptiert apiKey oder hostName oder 7 — es genügt also das schwächste dieser Verfahren. Wo API-Key *und* Token gemeint waren, reicht dann der API-Key allein.",
+      "remediation": "logicalConnector auf AND setzen, wenn beide Nachweise verlangt sind. Ist ODER beabsichtigt, muss jedes einzelne Verfahren für sich als ausreichend gelten.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "R1 2",
+      "title": "Mehrere Identifikationsverfahren sind ODER-verknüpft"
+    },
+    {
+      "affected": [
+        "5",
+        "Aussen 1.0",
+        "D1 1.0",
+        "E1 1.0",
+        "E10 1.0",
+        "E2 1.0",
+        "E3 1.0",
+        "E4 1.0",
+        "E5 1.0",
+        "E6 1.0",
+        "E7 1.0",
+        "E8 1.0",
+        "E9 1.0",
+        "G2",
+        "K11",
+        "K12",
+        "K16",
+        "K18",
+        "K20",
+        "K27",
+        "K30",
+        "N2 1.0",
+        "PX nicht gesperrt",
+        "R10",
+        "R11 18446744073709551615",
+        "R12 -9223372036854775808",
+        "R13 100.0",
+        "R14 100.0",
+        "R15 1",
+        "R17 1e-05",
+        "R18 1.8446744073709552e+19",
+        "R19 -9.223372036854776e+18",
+        "R2 1.5",
+        "R20 123456789.125",
+        "R21 1e-07",
+        "R22 9007199254740992.0",
+        "R23 1.0",
+        "R24 5e-324",
+        "R25 1.7976931348623157e+308",
+        "R26 -0.0",
+        "R27 0.30000000000000004",
+        "R3 1e+16",
+        "R4 0.0001",
+        "R5 1e-05",
+        "R6 -0.0",
+        "R7 1.2345678901234568e+22",
+        "R8",
+        "R9 true",
+        "W1 1.0",
+        "Zählerstände 🔌 β"
+      ],
+      "aggregate_count": 50,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [],
+      "id": "8053f802ceb5",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Betrifft 50 von 53 APIs. Ein Merkmal, das nahezu überall auftritt, beschreibt eine Gewohnheit und wird deshalb gesammelt gemeldet statt je Endpunkt einzeln. Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "dokument",
+      "severity": "high",
+      "subject": "50 von 53 APIs",
+      "title": "API ohne Identify-and-Authorize-Policy (durchgängig)"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: http://***@host.example:1/p?q=@#f",
+          "note": "",
+          "pointer": "API/API.e10/API.e10 → Routing"
+        }
+      ],
+      "id": "ff256e6ff3ac",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://***@host.example:1/p?q=@#f weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "E10 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: ${Ziel}/x",
+          "note": "über Alias aufgelöst: http://wurzel.example/x",
+          "pointer": "API/API.e2/API.e2 → Routing"
+        }
+      ],
+      "id": "e5c978590b59",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://wurzel.example/x weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "E2 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: ${Dup}",
+          "note": "über Alias aufgelöst: http://erster.example",
+          "pointer": "API/API.e4/API.e4 → Routing"
+        }
+      ],
+      "id": "a48c3232a9d9",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://erster.example weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "E4 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: http://a.example",
+          "note": "",
+          "pointer": "API/API.e6/API.e6"
+        }
+      ],
+      "id": "faddb30c832d",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://a.example weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "E6 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: http://lit.example/${sys:resource_path}",
+          "note": "",
+          "pointer": "API/API.e7/API.e7 → Routing"
+        }
+      ],
+      "id": "9f06221a1ebe",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://lit.example/${sys:resource_path} weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "E7 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: HTTP://***@K20.example",
+          "note": "",
+          "pointer": "assets/API/API.k20/API.k20"
+        }
+      ],
+      "id": "2afcd56e859a",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an HTTP://***@K20.example weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "K20",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [
+        "5",
+        "Aussen 1.0",
+        "D1 1.0",
+        "E1 1.0",
+        "E10 1.0",
+        "E2 1.0",
+        "E3 1.0",
+        "E4 1.0",
+        "E5 1.0",
+        "E6 1.0",
+        "E7 1.0",
+        "E8 1.0",
+        "E9 1.0",
+        "G2",
+        "Innen 1.0",
+        "K11",
+        "K12",
+        "K16",
+        "K18",
+        "K20",
+        "K27",
+        "K30",
+        "N2 1.0",
+        "PX nicht gesperrt",
+        "R1 2",
+        "R10",
+        "R11 18446744073709551615",
+        "R12 -9223372036854775808",
+        "R13 100.0",
+        "R14 100.0",
+        "R15 1",
+        "R17 1e-05",
+        "R18 1.8446744073709552e+19",
+        "R19 -9.223372036854776e+18",
+        "R2 1.5",
+        "R20 123456789.125",
+        "R21 1e-07",
+        "R22 9007199254740992.0",
+        "R23 1.0",
+        "R24 5e-324",
+        "R25 1.7976931348623157e+308",
+        "R26 -0.0",
+        "R27 0.30000000000000004",
+        "R3 1e+16",
+        "R4 0.0001",
+        "R5 1e-05",
+        "R6 -0.0",
+        "R7 1.2345678901234568e+22",
+        "R8",
+        "R9 true",
+        "W1 1.0",
+        "Zählerstände 🔌 β"
+      ],
+      "aggregate_count": 52,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.no_traffic_limit",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [],
+      "id": "0bb7c6185913",
+      "method": null,
+      "owasp": "API4",
+      "reason": "Betrifft 52 von 53 APIs. Ein Merkmal, das nahezu überall auftritt, beschreibt eine Gewohnheit und wird deshalb gesammelt gemeldet statt je Endpunkt einzeln. Auf API-Ebene ist keine Traffic-Begrenzung konfiguriert. Eine global gesetzte Threat-Protection kann greifen — sie ist in diesem Export jedoch nicht enthalten und daher hier nicht nachweisbar.",
+      "remediation": "Eine Traffic-Monitoring-Policy je API setzen oder die globale Threat-Protection-Konfiguration mit exportieren und prüfen.",
+      "scope": "dokument",
+      "severity": "info",
+      "subject": "52 von 53 APIs",
+      "title": "Keine Begrenzung von Anfragemenge oder Nachrichtengröße (durchgängig)"
+    }
+  ],
+  "format": "wm-audit-bericht/1",
+  "laufzeit_luecken": [
+    {
+      "key": "key_verification",
+      "owasp": "API2",
+      "title": "Wird ein erfundener API-Key tatsächlich abgewiesen?",
+      "why": "Ob die Policy im Betrieb greift, zeigt erst eine Anfrage."
+    },
+    {
+      "key": "jwt_signature",
+      "owasp": "API2",
+      "title": "Wird die JWT-Signatur wirklich geprüft?",
+      "why": "Die Konfiguration nennt das Verfahren, nicht dessen Umsetzung."
+    },
+    {
+      "key": "object_authorization",
+      "owasp": "API1",
+      "title": "Erreicht ein Aufrufer fremde Objekte?",
+      "why": "Objektbezogene Berechtigung liegt im Backend und braucht zwei Identitäten."
+    },
+    {
+      "key": "role_enforcement",
+      "owasp": "API5",
+      "title": "Wird die Rollenprüfung durchgesetzt?",
+      "why": "Das Gateway identifiziert; autorisieren muss das Backend."
+    },
+    {
+      "key": "trust_header",
+      "owasp": "API2",
+      "title": "Lässt sich ein Trust-Header fälschen?",
+      "why": "Hängt davon ab, wie das Backend eingehende Header behandelt."
+    },
+    {
+      "key": "global_threat_protection",
+      "owasp": "API4",
+      "title": "Greift eine globale Threat-Protection?",
+      "why": "Globale Konfiguration liegt außerhalb des API-Exports."
+    },
+    {
+      "key": "security_headers",
+      "owasp": "API8",
+      "title": "Werden Security-Header in Antworten gesetzt?",
+      "why": "Antwort-Header stehen in keiner Konfigurationsdatei."
+    },
+    {
+      "key": "cors",
+      "owasp": "API8",
+      "title": "Wie verhält sich CORS tatsächlich?",
+      "why": "Erst eine Preflight-Anfrage zeigt die wirksame Regel."
+    }
+  ],
+  "quelle": {
+    "art": "zip",
+    "name": "robust.zip",
+    "sha256": "3b084777534e3c34ad10e5c4011e8c892502f89cfcb6a909e8eeefea51911b3c"
+  },
+  "uebersprungen": [
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k1/API.k1"
+    },
+    {
+      "grund": "ohne_apiname",
+      "pfad": "assets/API/API.k10/API.k10"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k13/API.k13"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k14/API.k14"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k15/API.k15"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k17/API.k17"
+    },
+    {
+      "grund": "kein_objekt",
+      "pfad": "assets/API/API.k2/API.k2"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k21/API.k21"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k22/API.k22"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k23/API.k23"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k24/API.k24"
+    },
+    {
+      "grund": "kein_objekt",
+      "pfad": "assets/API/API.k25/API.k25"
+    },
+    {
+      "grund": "zu_tief",
+      "pfad": "assets/API/API.k26/API.k26"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k28/API.k28"
+    },
+    {
+      "grund": "kein_utf8",
+      "pfad": "assets/API/API.k29/API.k29"
+    },
+    {
+      "grund": "kein_utf8",
+      "pfad": "assets/API/API.k3/API.k3"
+    },
+    {
+      "grund": "zu_tief",
+      "pfad": "assets/API/API.k4/API.k4"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k5/API.k5"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k6/API.k6"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k7/API.k7"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k8/API.k8"
+    },
+    {
+      "grund": "kein_json",
+      "pfad": "assets/API/API.k9/API.k9"
+    },
+    {
+      "grund": "nicht_zugeordnet",
+      "pfad": "assets/API/API.n1/Policy/Policy.pn1/PolicyAction/PolicyAction.n1-b"
+    },
+    {
+      "grund": "ohne_api",
+      "pfad": "assets/API/API.oz/Policy/Policy.poz/PolicyAction/PolicyAction.o1"
+    },
+    {
+      "grund": "lesefehler",
+      "pfad": "bz/API/API.bz/API.bz"
+    },
+    {
+      "grund": "lesefehler",
+      "pfad": "crc/API/API.c/API.c"
+    },
+    {
+      "grund": "lesefehler",
+      "pfad": "enc/API/API.e/API.e"
+    },
+    {
+      "grund": "zu_gross",
+      "pfad": "gross/API/API.g/API.g"
+    }
+  ],
+  "werkzeug": "wm-audit 0.2.0",
+  "zusammenfassung": {
+    "apis_eindeutig": 53,
+    "apis_gelesen": 53,
+    "befunde": 12,
+    "belegt": 11,
+    "gesperrt": 5,
+    "schwere": {
+      "critical": 1,
+      "high": 10,
+      "info": 1,
+      "low": 0,
+      "medium": 0
+    },
+    "uebersprungen": 28
+  }
+}

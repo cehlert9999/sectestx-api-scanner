@@ -180,6 +180,22 @@ def _antwort(nutzlast: dict[str, Any]) -> dict[str, Any]:
         "summary": {
             "grade_design": sc["design"]["letter"],
             "grade_hygiene": sc["hygiene"]["letter"],
+            # Herleitung je Dimension, damit das UI erklären kann, WIE die Note
+            # zustande kam: die rechnerische Note vor Deckeln (``uncapped``) und
+            # die Zahl der bewertenden (belegten) Befunde. Additiv — die flachen
+            # ``grade_*``-Felder bleiben für Bestandskonsumenten erhalten.
+            "grades": {
+                "design": {
+                    "letter": sc["design"]["letter"],
+                    "uncapped": sc["design"]["uncapped"],
+                    "finding_count": sc["design"]["finding_count"],
+                },
+                "hygiene": {
+                    "letter": sc["hygiene"]["letter"],
+                    "uncapped": sc["hygiene"]["uncapped"],
+                    "finding_count": sc["hygiene"]["finding_count"],
+                },
+            },
             "caps": sc["design"]["caps"] + sc["hygiene"]["caps"],
             "counts": {
                 "belegt": sum(1 for f in findings if f["confidence"] == "belegt" and f["aggregate_count"] is None),

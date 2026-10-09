@@ -36,6 +36,34 @@
    "api": "SauberAPI 1.0",
    "erwartet": [],
    "warum": "korrekt konfiguriert - jeder Befund hier waere eine Falschmeldung"
+  },
+  {
+   "api": "OhneLimitAPI 1.0",
+   "erwartet": [
+    "gw.no_traffic_limit"
+   ],
+   "warum": "keine throttling-/trafficOptimization-Policy"
+  },
+  {
+   "api": "LogAPI 1.0",
+   "erwartet": [
+    "gw.log_invocation"
+   ],
+   "warum": "Log-Invocation-Policy mit Payload"
+  },
+  {
+   "api": "RoutingKlartextAPI 2.0",
+   "erwartet": [
+    "gw.plaintext_backend"
+   ],
+   "warum": "Routing über Alias auf http://; passSecurityHeaders steht als Text \"false\""
+  },
+  {
+   "api": "SpecHttpAPI 1.0",
+   "erwartet": [
+    "gw.no_identify_policy"
+   ],
+   "warum": "Identify-Aktion liegt vor, ist aber keiner Stage zugeordnet; http-Server der Spec wird nicht geroutet"
   }
  ]
 }

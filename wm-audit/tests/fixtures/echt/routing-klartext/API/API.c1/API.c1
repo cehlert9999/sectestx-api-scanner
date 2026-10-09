@@ -1,0 +1,37 @@
+{
+ "id": "c1",
+ "apiName": "RoutingKlartextAPI",
+ "apiVersion": "2.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Beta",
+ "nativeEndpoint": [
+  {
+   "uri": "https://intern.example/v2",
+   "passSecurityHeaders": "false",
+   "connectionTimeoutDuration": "30",
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-c1"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.1",
+  "info": {
+   "title": "RoutingKlartextAPI",
+   "version": "2.0"
+  },
+  "paths": {
+   "/zaehler/{id}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

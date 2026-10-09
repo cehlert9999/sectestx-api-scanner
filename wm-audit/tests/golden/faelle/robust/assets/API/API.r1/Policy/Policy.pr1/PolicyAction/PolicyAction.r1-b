@@ -1,0 +1,43 @@
+{
+ "id": "r1-b",
+ "names": [],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "allowAnonymous",
+   "values": [
+    true
+   ]
+  },
+  {
+   "templateKey": "logicalConnector",
+   "values": [
+    "or"
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "apiKey"
+     ]
+    }
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    null,
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "hostName",
+      7
+     ]
+    }
+   ]
+  }
+ ]
+}

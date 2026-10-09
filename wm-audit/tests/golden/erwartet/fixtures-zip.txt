@@ -1,0 +1,40 @@
+wm-audit 0.2.0 · fixtures.zip (zip)
+SHA-256: 5a9e3e90de9f0cbe92d4986989e15c6fc00a3892fca495bf9f4b892c1fd17a8a
+9 APIs gelesen (9 eindeutig) · 1 Dateien übersprungen · 2 gesperrte Einträge nicht geöffnet
+
+Befunde: 11 (7 belegt)
+  CRITICAL  belegt          gw.anonymous_allowed          AnonymAPI 1.0
+            Identify-Policy erlaubt anonymen Zugriff
+  HIGH      belegt          gw.http_allowed               KlartextAPI 1.0
+            Gateway akzeptiert unverschlüsseltes HTTP
+  HIGH      belegt          gw.identify_or                OderAPI 1.0
+            Mehrere Identifikationsverfahren sind ODER-verknüpft
+  HIGH      belegt          gw.no_identify_policy         OffeneAPI 1.0
+            API ohne Identify-and-Authorize-Policy
+  HIGH      belegt          gw.no_identify_policy         SpecHttpAPI 1.0
+            API ohne Identify-and-Authorize-Policy
+  HIGH      belegt          gw.plaintext_backend          KlartextAPI 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          RoutingKlartextAPI 2.0
+            Weiterleitung an ein Klartext-Backend
+  MEDIUM    wahrscheinlich  gw.application_identity_only  AnonymAPI 1.0
+            Nur Anwendungs-Identifikation, keine Benutzer-Authentifizierung
+  MEDIUM    wahrscheinlich  gw.no_traffic_limit           OhneLimitAPI 1.0
+            Keine Begrenzung von Anfragemenge oder Nachrichtengröße
+  MEDIUM    wahrscheinlich  gw.pass_security_headers      KlartextAPI 1.0
+            Security-Header werden an das Backend durchgereicht
+  LOW       wahrscheinlich  gw.log_invocation             LogAPI 1.0
+            Log-Invocation-Policy aktiv
+
+Übersprungen:
+  nicht_zugeordnet  echt/spec-http/API/API.c2/Policy/Policy.p-c2/PolicyAction/PolicyAction.c2-verwaist
+
+Statisch nicht prüfbar (8):
+  API2  Wird ein erfundener API-Key tatsächlich abgewiesen?
+  API2  Wird die JWT-Signatur wirklich geprüft?
+  API1  Erreicht ein Aufrufer fremde Objekte?
+  API5  Wird die Rollenprüfung durchgesetzt?
+  API2  Lässt sich ein Trust-Header fälschen?
+  API4  Greift eine globale Threat-Protection?
+  API8  Werden Security-Header in Antworten gesetzt?
+  API8  Wie verhält sich CORS tatsächlich?

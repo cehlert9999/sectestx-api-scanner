@@ -1,0 +1,42 @@
+{
+ "id": "y62",
+ "names": [
+  {
+   "value": "Identify & Authorize",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "logicalConnector",
+   "values": [
+    "AND"
+   ]
+  },
+  {
+   "templateKey": "allowAnonymous",
+   "values": [
+    "false"
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "applicationLookup",
+     "values": [
+      "strict"
+     ]
+    },
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "jwtToken"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": false
+}

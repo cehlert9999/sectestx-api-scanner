@@ -1,0 +1,19 @@
+{
+ "id": "o1",
+ "names": [
+  {
+   "value": "Protocol",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "http"
+   ]
+  }
+ ],
+ "active": false
+}

@@ -1,0 +1,19 @@
+{
+ "id": "e8-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${Ziel"
+   ]
+  }
+ ],
+ "active": false
+}

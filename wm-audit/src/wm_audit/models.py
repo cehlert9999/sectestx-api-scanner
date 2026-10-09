@@ -15,6 +15,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from wm_audit import werte
+
 
 class PolicyAction(BaseModel):
     """Eine einzelne Policy-Aktion, z.B. „Identify & Authorize"."""
@@ -37,7 +39,7 @@ class PolicyAction(BaseModel):
         """Alle Werte eines direkten Parameters."""
         for p in self.parameters:
             if p.get("templateKey") == template_key:
-                return [str(v) for v in (p.get("values") or [])]
+                return werte.text_liste(p.get("values"))
         return []
 
     def groups(self, template_key: str) -> list[dict[str, Any]]:
@@ -46,10 +48,34 @@ class PolicyAction(BaseModel):
 
     @staticmethod
     def group_values(group: dict[str, Any], template_key: str) -> list[str]:
-        for p in group.get("parameters", []) or []:
+        for p in werte.objekte(group.get("parameters")):
             if p.get("templateKey") == template_key:
-                return [str(v) for v in (p.get("values") or [])]
+                return werte.text_liste(p.get("values"))
         return []
+
+
+def aufloesen(uri: str, aliase: dict[str, str]) -> str:
+    """Ersetzt ``${Name}`` durch den Alias-Wert; Unbekanntes bleibt stehen.
+
+    Ein Durchgang, keine Rekursion — ein Alias, der auf einen Alias zeigt, wird
+    nicht weiter aufgelöst. ``${sys:resource_path}`` bleibt als Systemvariable stehen.
+    """
+    teile: list[str] = []
+    i = 0
+    while True:
+        start = uri.find("${", i)
+        if start < 0:
+            teile.append(uri[i:])
+            break
+        ende = uri.find("}", start + 2)
+        if ende < 0:
+            teile.append(uri[i:])
+            break
+        name = uri[start + 2:ende]
+        teile.append(uri[i:start])
+        teile.append(aliase.get(name, uri[start:ende + 1]))
+        i = ende + 1
+    return "".join(teile)
 
 
 class NativeEndpoint(BaseModel):
@@ -86,6 +112,10 @@ class GatewayApi(BaseModel):
     #: Herkunft im Export, für die Evidence-Angabe im Befund.
     source_path: str = ""
 
+    #: Einfache Aliase (``type: simple``) aus demselben Export: Name → Wert.
+    #: Routing-Ziele verweisen darauf, etwa ``${Backend_Alias}/${sys:resource_path}``.
+    aliase: dict[str, str] = Field(default_factory=dict)
+
     def actions(self, template_key: str) -> list[PolicyAction]:
         return [a for a in self.policy_actions if a.template_key == template_key]
 
@@ -96,12 +126,52 @@ class GatewayApi(BaseModel):
     def label(self) -> str:
         return f"{self.name} {self.version}" if self.version else self.name
 
+    def hat_routing(self) -> bool:
+        """Ist überhaupt eine Routing-Policy zugeordnet (gleich welcher Art)?"""
+        return any("routing" in a.template_key.lower() for a in self.policy_actions)
+
+    def routing_ziele(self) -> list[tuple[PolicyAction, str, str]]:
+        """``(Aktion, endpointUri wie konfiguriert, mit Aliasen aufgelöst)``.
+
+        Das tatsächliche Backend steht in der Routing-Policy, nicht in
+        ``nativeEndpoint`` — dort liegen die Server-Einträge der importierten
+        Spec, die das Gateway nicht zwingend anspricht. Ausgewertet wird nur
+        ``straightThroughRouting``; andere Routing-Arten sind nicht belegt.
+        """
+        return [
+            (a, uri, aufloesen(uri, self.aliase))
+            for a in self.actions("straightThroughRouting")
+            for uri in a.values("endpointUri")
+        ]
+
+
+class Uebersprungen(BaseModel):
+    """Eine Datei, die wie ein Asset aussieht, aber nicht ausgewertet wurde.
+
+    Ein Werkzeug, das sagt, was es nicht gelesen hat, ist angreifbar nur dort, wo
+    es das selbst offenlegt — deshalb steht jede übersprungene Datei im Bericht.
+    """
+
+    pfad: str
+    #: Stabiler Code, identisch in der Rust-Portierung: ``zu_gross``,
+    #: ``kein_utf8``, ``zu_tief``, ``kein_json``, ``kein_objekt``,
+    #: ``ohne_apiname``, ``ohne_api``, ``nicht_zugeordnet``, ``lesefehler``,
+    #: ``symlink``.
+    grund: str
+
 
 class GatewayExport(BaseModel):
     """Ein eingelesener Export."""
 
     apis: list[GatewayApi] = Field(default_factory=list)
     source: str = ""
+    #: ``zip`` oder ``verzeichnis``.
+    art: str = ""
+    #: SHA-256 der ZIP-Datei — belegt im Bericht, welche Datei geprüft wurde.
+    sha256: str | None = None
+    uebersprungen: list[Uebersprungen] = Field(default_factory=list)
+    #: Zahl der Einträge mit Zugangsdaten/Schlüsseln, die nie geöffnet wurden.
+    gesperrt: int = 0
 
     def __len__(self) -> int:
         return len(self.apis)

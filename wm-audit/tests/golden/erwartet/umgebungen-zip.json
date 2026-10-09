@@ -1,0 +1,178 @@
+{
+  "apis": [
+    {
+      "id": "",
+      "label": "UmgebungsAPI 1.0",
+      "name": "UmgebungsAPI",
+      "pfad": "prod/assets/API/API.u1/API.u1",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "NachbarAPI 1.0",
+      "name": "NachbarAPI",
+      "pfad": "prod/assets/API/API.u2/API.u2",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "UmgebungsAPI 1.0",
+      "name": "UmgebungsAPI",
+      "pfad": "test/assets/API/API.u1/API.u1",
+      "policies": [
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "NachbarAPI 1.0",
+      "name": "NachbarAPI",
+      "pfad": "test/assets/API/API.u2/API.u2",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    }
+  ],
+  "befunde": [
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "policyActions: entryProtocolPolicy, straightThroughRouting, throttle",
+          "note": "kein evaluatePolicy vorhanden",
+          "pointer": "test/assets/API/API.u1/API.u1"
+        }
+      ],
+      "id": "715aa91b3208",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "UmgebungsAPI 1.0",
+      "title": "API ohne Identify-and-Authorize-Policy"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: ${Backend}/${sys:resource_path}",
+          "note": "über Alias aufgelöst: http://test-backend.intern/${sys:resource_path}",
+          "pointer": "test/assets/API/API.u1/API.u1 → Routing"
+        }
+      ],
+      "id": "d03ca6d4483d",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://test-backend.intern/${sys:resource_path} weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "UmgebungsAPI 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    }
+  ],
+  "format": "wm-audit-bericht/1",
+  "laufzeit_luecken": [
+    {
+      "key": "key_verification",
+      "owasp": "API2",
+      "title": "Wird ein erfundener API-Key tatsächlich abgewiesen?",
+      "why": "Ob die Policy im Betrieb greift, zeigt erst eine Anfrage."
+    },
+    {
+      "key": "jwt_signature",
+      "owasp": "API2",
+      "title": "Wird die JWT-Signatur wirklich geprüft?",
+      "why": "Die Konfiguration nennt das Verfahren, nicht dessen Umsetzung."
+    },
+    {
+      "key": "object_authorization",
+      "owasp": "API1",
+      "title": "Erreicht ein Aufrufer fremde Objekte?",
+      "why": "Objektbezogene Berechtigung liegt im Backend und braucht zwei Identitäten."
+    },
+    {
+      "key": "role_enforcement",
+      "owasp": "API5",
+      "title": "Wird die Rollenprüfung durchgesetzt?",
+      "why": "Das Gateway identifiziert; autorisieren muss das Backend."
+    },
+    {
+      "key": "trust_header",
+      "owasp": "API2",
+      "title": "Lässt sich ein Trust-Header fälschen?",
+      "why": "Hängt davon ab, wie das Backend eingehende Header behandelt."
+    },
+    {
+      "key": "global_threat_protection",
+      "owasp": "API4",
+      "title": "Greift eine globale Threat-Protection?",
+      "why": "Globale Konfiguration liegt außerhalb des API-Exports."
+    },
+    {
+      "key": "security_headers",
+      "owasp": "API8",
+      "title": "Werden Security-Header in Antworten gesetzt?",
+      "why": "Antwort-Header stehen in keiner Konfigurationsdatei."
+    },
+    {
+      "key": "cors",
+      "owasp": "API8",
+      "title": "Wie verhält sich CORS tatsächlich?",
+      "why": "Erst eine Preflight-Anfrage zeigt die wirksame Regel."
+    }
+  ],
+  "quelle": {
+    "art": "zip",
+    "name": "umgebungen.zip",
+    "sha256": "ad26ed99c20b3d62c1bd0cbccde3a85e9f19c394287223cc64586cf8fc31ece3"
+  },
+  "uebersprungen": [],
+  "werkzeug": "wm-audit 0.2.0",
+  "zusammenfassung": {
+    "apis_eindeutig": 2,
+    "apis_gelesen": 4,
+    "befunde": 2,
+    "belegt": 2,
+    "gesperrt": 0,
+    "schwere": {
+      "critical": 0,
+      "high": 2,
+      "info": 0,
+      "low": 0,
+      "medium": 0
+    },
+    "uebersprungen": 0
+  }
+}

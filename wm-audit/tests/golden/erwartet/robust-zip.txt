@@ -1,0 +1,69 @@
+wm-audit 0.2.0 · robust.zip (zip)
+SHA-256: 3b084777534e3c34ad10e5c4011e8c892502f89cfcb6a909e8eeefea51911b3c
+53 APIs gelesen (53 eindeutig) · 28 Dateien übersprungen · 5 gesperrte Einträge nicht geöffnet
+
+Befunde: 12 (11 belegt)
+  CRITICAL  belegt          gw.anonymous_allowed          R1 2
+            Identify-Policy erlaubt anonymen Zugriff
+  HIGH      belegt          gw.http_allowed               N2 1.0
+            Gateway akzeptiert unverschlüsseltes HTTP
+  HIGH      belegt          gw.http_allowed               R1 2
+            Gateway akzeptiert unverschlüsseltes HTTP
+  HIGH      belegt          gw.identify_or                R1 2
+            Mehrere Identifikationsverfahren sind ODER-verknüpft
+  HIGH      belegt          gw.no_identify_policy         50 von 53 APIs
+            API ohne Identify-and-Authorize-Policy (durchgängig)
+  HIGH      belegt          gw.plaintext_backend          E10 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          E2 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          E4 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          E6 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          E7 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          K20
+            Weiterleitung an ein Klartext-Backend
+  INFO      wahrscheinlich  gw.no_traffic_limit           52 von 53 APIs
+            Keine Begrenzung von Anfragemenge oder Nachrichtengröße (durchgängig)
+
+Übersprungen:
+  kein_json         assets/API/API.k1/API.k1
+  ohne_apiname      assets/API/API.k10/API.k10
+  kein_json         assets/API/API.k13/API.k13
+  kein_json         assets/API/API.k14/API.k14
+  kein_json         assets/API/API.k15/API.k15
+  kein_json         assets/API/API.k17/API.k17
+  kein_objekt       assets/API/API.k2/API.k2
+  kein_json         assets/API/API.k21/API.k21
+  kein_json         assets/API/API.k22/API.k22
+  kein_json         assets/API/API.k23/API.k23
+  kein_json         assets/API/API.k24/API.k24
+  kein_objekt       assets/API/API.k25/API.k25
+  zu_tief           assets/API/API.k26/API.k26
+  kein_json         assets/API/API.k28/API.k28
+  kein_utf8         assets/API/API.k29/API.k29
+  kein_utf8         assets/API/API.k3/API.k3
+  zu_tief           assets/API/API.k4/API.k4
+  kein_json         assets/API/API.k5/API.k5
+  kein_json         assets/API/API.k6/API.k6
+  kein_json         assets/API/API.k7/API.k7
+  kein_json         assets/API/API.k8/API.k8
+  kein_json         assets/API/API.k9/API.k9
+  nicht_zugeordnet  assets/API/API.n1/Policy/Policy.pn1/PolicyAction/PolicyAction.n1-b
+  ohne_api          assets/API/API.oz/Policy/Policy.poz/PolicyAction/PolicyAction.o1
+  lesefehler        bz/API/API.bz/API.bz
+  lesefehler        crc/API/API.c/API.c
+  lesefehler        enc/API/API.e/API.e
+  zu_gross          gross/API/API.g/API.g
+
+Statisch nicht prüfbar (8):
+  API2  Wird ein erfundener API-Key tatsächlich abgewiesen?
+  API2  Wird die JWT-Signatur wirklich geprüft?
+  API1  Erreicht ein Aufrufer fremde Objekte?
+  API5  Wird die Rollenprüfung durchgesetzt?
+  API2  Lässt sich ein Trust-Header fälschen?
+  API4  Greift eine globale Threat-Protection?
+  API8  Werden Security-Header in Antworten gesetzt?
+  API8  Wie verhält sich CORS tatsächlich?

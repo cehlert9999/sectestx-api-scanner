@@ -1,0 +1,467 @@
+{
+  "apis": [
+    {
+      "id": "c1",
+      "label": "RoutingKlartextAPI 2.0",
+      "name": "RoutingKlartextAPI",
+      "pfad": "echt/routing-klartext/API/API.c1/API.c1",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "2.0"
+    },
+    {
+      "id": "c2",
+      "label": "SpecHttpAPI 1.0",
+      "name": "SpecHttpAPI",
+      "pfad": "echt/spec-http/API/API.c2/API.c2",
+      "policies": [
+        "throttle",
+        "entryProtocolPolicy",
+        "straightThroughRouting"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b1",
+      "label": "OffeneAPI 1.0",
+      "name": "OffeneAPI",
+      "pfad": "fehler/assets/API/API.b1/API.b1",
+      "policies": [
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b2",
+      "label": "AnonymAPI 1.0",
+      "name": "AnonymAPI",
+      "pfad": "fehler/assets/API/API.b2/API.b2",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b3",
+      "label": "OderAPI 1.0",
+      "name": "OderAPI",
+      "pfad": "fehler/assets/API/API.b3/API.b3",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b4",
+      "label": "KlartextAPI 1.0",
+      "name": "KlartextAPI",
+      "pfad": "fehler/assets/API/API.b4/API.b4",
+      "policies": [
+        "entryProtocolPolicy",
+        "throttlingPolicy",
+        "evaluatePolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b5",
+      "label": "OhneLimitAPI 1.0",
+      "name": "OhneLimitAPI",
+      "pfad": "fehler/assets/API/API.b5/API.b5",
+      "policies": [
+        "entryProtocolPolicy",
+        "evaluatePolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "b6",
+      "label": "LogAPI 1.0",
+      "name": "LogAPI",
+      "pfad": "fehler/assets/API/API.b6/API.b6",
+      "policies": [
+        "entryProtocolPolicy",
+        "evaluatePolicy",
+        "throttlingPolicy",
+        "logInvocation"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "a1",
+      "label": "SauberAPI 1.0",
+      "name": "SauberAPI",
+      "pfad": "sauber/assets/API/API.a1/API.a1",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy",
+        "throttlingPolicy"
+      ],
+      "version": "1.0"
+    }
+  ],
+  "befunde": [
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.anonymous_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "allowAnonymous: true",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b2/API.b2 → Identify & Authorize"
+        }
+      ],
+      "id": "cc3962deec81",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Identify-and-Authorize-Policy ist konfiguriert, lässt über allowAnonymous aber Anfragen ohne Identifikation durch. Die Policy sieht in der Oberfläche vorhanden aus und greift trotzdem nicht.",
+      "remediation": "allowAnonymous auf false setzen.",
+      "scope": "api",
+      "severity": "critical",
+      "subject": "AnonymAPI 1.0",
+      "title": "Identify-Policy erlaubt anonymen Zugriff"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.http_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "protocol: http, https",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4 → HTTP+HTTPS"
+        }
+      ],
+      "id": "f0180eb09fc8",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Die Entry-Protocol-Policy lässt HTTP zu. Zugangsdaten und Nutzdaten sind auf dem Weg zum Gateway mitlesbar.",
+      "remediation": "Nur HTTPS zulassen und HTTP an der Kante umleiten oder abweisen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "KlartextAPI 1.0",
+      "title": "Gateway akzeptiert unverschlüsseltes HTTP"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.identify_or",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "logicalConnector: OR, identificationType: apiKey, oAuth2Token",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b3/API.b3 → Identify & Authorize"
+        }
+      ],
+      "id": "2eae8d04c34f",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Die Policy akzeptiert apiKey oder oAuth2Token — es genügt also das schwächste dieser Verfahren. Wo API-Key *und* Token gemeint waren, reicht dann der API-Key allein.",
+      "remediation": "logicalConnector auf AND setzen, wenn beide Nachweise verlangt sind. Ist ODER beabsichtigt, muss jedes einzelne Verfahren für sich als ausreichend gelten.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "OderAPI 1.0",
+      "title": "Mehrere Identifikationsverfahren sind ODER-verknüpft"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "policyActions: entryProtocolPolicy, throttlingPolicy",
+          "note": "kein evaluatePolicy vorhanden",
+          "pointer": "fehler/assets/API/API.b1/API.b1"
+        }
+      ],
+      "id": "bcbe013afbe0",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "OffeneAPI 1.0",
+      "title": "API ohne Identify-and-Authorize-Policy"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.no_identify_policy",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "policyActions: entryProtocolPolicy, straightThroughRouting, throttle",
+          "note": "kein evaluatePolicy vorhanden",
+          "pointer": "echt/spec-http/API/API.c2/API.c2"
+        }
+      ],
+      "id": "ce0bc4c30d02",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Für diese API ist keine Identify-and-Authorize-Policy konfiguriert. Das Gateway identifiziert den Aufrufer damit nicht und reicht jede Anfrage an das Backend weiter.",
+      "remediation": "Im Policy-Stage „Identify and Access“ eine Identify-and-Authorize-Policy einrichten. Ist die API bewusst öffentlich, sollte das dokumentiert und durch Threat-Protection und Rate-Limits abgesichert sein.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "SpecHttpAPI 1.0",
+      "title": "API ohne Identify-and-Authorize-Policy"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: http://intern.example/v1",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4"
+        }
+      ],
+      "id": "cc8ef33cc27c",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://intern.example/v1 weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "KlartextAPI 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "endpointUri: ${Backend}/${sys:resource_path}",
+          "note": "über Alias aufgelöst: http://***@backend.intern:8080/${sys:resource_path}",
+          "pointer": "echt/routing-klartext/API/API.c1/API.c1 → Straight Through Routing"
+        }
+      ],
+      "id": "73f1acb1895e",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://***@backend.intern:8080/${sys:resource_path} weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "RoutingKlartextAPI 2.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.application_identity_only",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "identificationType: apiKey",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b2/API.b2 → Identify & Authorize"
+        }
+      ],
+      "id": "78821dc516ac",
+      "method": null,
+      "owasp": "API2",
+      "reason": "Identifiziert wird ausschließlich über apiKey. Das weist eine Anwendung aus, nicht den handelnden Benutzer — jede benutzerbezogene Autorisierung muss dann vollständig im Backend stattfinden.",
+      "remediation": "Prüfen, ob das Backend die Benutzeridentität selbst auswertet. Für benutzerbezogene Daten zusätzlich OAuth2 oder JWT verlangen.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "AnonymAPI 1.0",
+      "title": "Nur Anwendungs-Identifikation, keine Benutzer-Authentifizierung"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.no_traffic_limit",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "keine Traffic-Optimization-Policy (throttle)",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b5/API.b5"
+        }
+      ],
+      "id": "023e132ec9e2",
+      "method": null,
+      "owasp": "API4",
+      "reason": "Auf API-Ebene ist keine Traffic-Begrenzung konfiguriert. Eine global gesetzte Threat-Protection kann greifen — sie ist in diesem Export jedoch nicht enthalten und daher hier nicht nachweisbar.",
+      "remediation": "Eine Traffic-Monitoring-Policy je API setzen oder die globale Threat-Protection-Konfiguration mit exportieren und prüfen.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "OhneLimitAPI 1.0",
+      "title": "Keine Begrenzung von Anfragemenge oder Nachrichtengröße"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.pass_security_headers",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "passSecurityHeaders: true (http://intern.example/v1)",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b4/API.b4"
+        }
+      ],
+      "id": "fadb0c27e6c3",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Authorization- und weitere Security-Header des Aufrufers gehen unverändert an das Backend. Vertraut das Backend ihnen, entscheidet am Ende der Aufrufer über seine eigene Berechtigung.",
+      "remediation": "Prüfen, ob das Backend die durchgereichten Header auswertet. Wenn nicht benötigt, passSecurityHeaders abschalten.",
+      "scope": "api",
+      "severity": "medium",
+      "subject": "KlartextAPI 1.0",
+      "title": "Security-Header werden an das Backend durchgereicht"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.log_invocation",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "logInvocation",
+          "note": "",
+          "pointer": "fehler/assets/API/API.b6/API.b6 → Log Invocation"
+        }
+      ],
+      "id": "128df275b173",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Anfragen werden protokolliert. Sind Nutzdaten eingeschlossen, landen personenbezogene Daten und Zugangsdaten in den Logs.",
+      "remediation": "Prüfen, welche Bestandteile protokolliert werden, und Nutzdaten nur mit dokumentiertem Zweck und Löschfrist aufzeichnen.",
+      "scope": "api",
+      "severity": "low",
+      "subject": "LogAPI 1.0",
+      "title": "Log-Invocation-Policy aktiv"
+    }
+  ],
+  "format": "wm-audit-bericht/1",
+  "laufzeit_luecken": [
+    {
+      "key": "key_verification",
+      "owasp": "API2",
+      "title": "Wird ein erfundener API-Key tatsächlich abgewiesen?",
+      "why": "Ob die Policy im Betrieb greift, zeigt erst eine Anfrage."
+    },
+    {
+      "key": "jwt_signature",
+      "owasp": "API2",
+      "title": "Wird die JWT-Signatur wirklich geprüft?",
+      "why": "Die Konfiguration nennt das Verfahren, nicht dessen Umsetzung."
+    },
+    {
+      "key": "object_authorization",
+      "owasp": "API1",
+      "title": "Erreicht ein Aufrufer fremde Objekte?",
+      "why": "Objektbezogene Berechtigung liegt im Backend und braucht zwei Identitäten."
+    },
+    {
+      "key": "role_enforcement",
+      "owasp": "API5",
+      "title": "Wird die Rollenprüfung durchgesetzt?",
+      "why": "Das Gateway identifiziert; autorisieren muss das Backend."
+    },
+    {
+      "key": "trust_header",
+      "owasp": "API2",
+      "title": "Lässt sich ein Trust-Header fälschen?",
+      "why": "Hängt davon ab, wie das Backend eingehende Header behandelt."
+    },
+    {
+      "key": "global_threat_protection",
+      "owasp": "API4",
+      "title": "Greift eine globale Threat-Protection?",
+      "why": "Globale Konfiguration liegt außerhalb des API-Exports."
+    },
+    {
+      "key": "security_headers",
+      "owasp": "API8",
+      "title": "Werden Security-Header in Antworten gesetzt?",
+      "why": "Antwort-Header stehen in keiner Konfigurationsdatei."
+    },
+    {
+      "key": "cors",
+      "owasp": "API8",
+      "title": "Wie verhält sich CORS tatsächlich?",
+      "why": "Erst eine Preflight-Anfrage zeigt die wirksame Regel."
+    }
+  ],
+  "quelle": {
+    "art": "zip",
+    "name": "fixtures.zip",
+    "sha256": "5a9e3e90de9f0cbe92d4986989e15c6fc00a3892fca495bf9f4b892c1fd17a8a"
+  },
+  "uebersprungen": [
+    {
+      "grund": "nicht_zugeordnet",
+      "pfad": "echt/spec-http/API/API.c2/Policy/Policy.p-c2/PolicyAction/PolicyAction.c2-verwaist"
+    }
+  ],
+  "werkzeug": "wm-audit 0.2.0",
+  "zusammenfassung": {
+    "apis_eindeutig": 9,
+    "apis_gelesen": 9,
+    "befunde": 11,
+    "belegt": 7,
+    "gesperrt": 2,
+    "schwere": {
+      "critical": 1,
+      "high": 6,
+      "info": 0,
+      "low": 1,
+      "medium": 3
+    },
+    "uebersprungen": 1
+  }
+}

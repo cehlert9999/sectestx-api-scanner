@@ -1,0 +1,19 @@
+{
+ "id": "e10-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "http://u@v:w@host.example:1/p?q=@#f"
+   ]
+  }
+ ],
+ "active": false
+}

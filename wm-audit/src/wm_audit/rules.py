@@ -42,6 +42,27 @@ def _f(api: GatewayApi, **kw) -> Finding:
     return Finding(**kw)
 
 
+def ohne_zugangsdaten(uri: str) -> str:
+    """``http://user:pw@host/x`` → ``http://***@host/x``.
+
+    Ein Routing-Ziel oder Alias kann Zugangsdaten in der URL tragen. In einen
+    Bericht, der weitergegeben wird, gehören sie nicht.
+    """
+    i = uri.find("://")
+    if i < 0:
+        return uri
+    start = i + 3
+    ende = len(uri)
+    for z in "/?#":
+        j = uri.find(z, start)
+        if j >= 0:
+            ende = min(ende, j)
+    at = uri.rfind("@", start, ende)
+    if at < 0:
+        return uri
+    return uri[:start] + "***" + uri[at:]
+
+
 # --------------------------------------------------------------- Identität
 
 @regel
@@ -127,13 +148,19 @@ def identifikation_oder_verknuepft(api: GatewayApi):
         )
 
 
+#: Verfahren, die eine Anwendung ausweisen, nicht einen Benutzer. ``hostNameAddress``
+#: ist der Wert aus der offiziellen IBM-Postman-Collection; ``hostName`` bleibt für
+#: ältere Fixtures erhalten.
+NUR_ANWENDUNG = {"apiKey", "hostNameAddress", "hostName", "ipAddressRange"}
+
+
 @regel
 def nur_application_identitaet(api: GatewayApi):
     """API-Key identifiziert eine Anwendung, nicht einen Benutzer."""
     for a in api.actions("evaluatePolicy"):
         rules = a.groups("IdentificationRule")
         typen = {t for r in rules for t in a.group_values(r, "identificationType")}
-        if typen and typen <= {"apiKey", "hostName", "ipAddressRange"}:
+        if typen and typen <= NUR_ANWENDUNG:
             yield _f(
                 api,
                 check_id="gw.application_identity_only",
@@ -181,25 +208,50 @@ def http_erlaubt(api: GatewayApi):
             )
 
 
+def _klartext(api: GatewayApi, uri: str, evidence: Evidence) -> Finding:
+    return _f(
+        api,
+        check_id="gw.plaintext_backend",
+        title="Weiterleitung an ein Klartext-Backend",
+        confidence=Confidence.BELEGT,
+        severity=Severity.HIGH,
+        owasp=OWASPCategory.API8,
+        reason=(
+            f"Das Gateway leitet an {uri} weiter. Die Verbindung endet damit "
+            "am Gateway; im internen Netz laufen die Daten im Klartext."
+        ),
+        remediation="Das Backend über HTTPS ansprechen.",
+        evidence=[evidence],
+    )
+
+
 @regel
 def klartext_backend(api: GatewayApi):
-    """Hinter dem Gateway geht es unverschlüsselt weiter."""
+    """Hinter dem Gateway geht es unverschlüsselt weiter.
+
+    Maßgeblich ist das Ziel der Routing-Policy. ``nativeEndpoint`` enthält die
+    Server der importierten Spec — eine Spec mit ``http``- *und* ``https``-Server
+    wird über HTTPS geroutet und ist kein Befund. Nur ohne jede Routing-Policy
+    (ältere Exporte) dient ``nativeEndpoint`` als Ersatz. Ist ein anderes
+    Routing als ``straightThroughRouting`` zugeordnet, schweigt die Regel —
+    dessen Ziel ist nicht belegt.
+    """
+    if api.hat_routing():
+        for a, konfiguriert, aufgeloest in api.routing_ziele():
+            if not aufgeloest.lower().startswith("http://"):
+                continue
+            uri = ohne_zugangsdaten(aufgeloest)
+            yield _klartext(api, uri, Evidence(
+                pointer=f"{api.source_path} → {a.name}",
+                excerpt=f"endpointUri: {ohne_zugangsdaten(konfiguriert)}",
+                note="" if konfiguriert == aufgeloest else f"über Alias aufgelöst: {uri}",
+            ))
+        return
     for ep in api.native_endpoints:
         if ep.is_plaintext:
-            yield _f(
-                api,
-                check_id="gw.plaintext_backend",
-                title="Weiterleitung an ein Klartext-Backend",
-                confidence=Confidence.BELEGT,
-                severity=Severity.HIGH,
-                owasp=OWASPCategory.API8,
-                reason=(
-                    f"Das Gateway leitet an {ep.uri} weiter. Die Verbindung endet damit "
-                    "am Gateway; im internen Netz laufen die Daten im Klartext."
-                ),
-                remediation="Das Backend über HTTPS ansprechen.",
-                evidence=[Evidence(pointer=api.source_path, excerpt=f"nativeEndpoint: {ep.uri}")],
-            )
+            uri = ohne_zugangsdaten(ep.uri)
+            yield _klartext(api, uri, Evidence(pointer=api.source_path,
+                                               excerpt=f"nativeEndpoint: {uri}"))
 
 
 @regel
@@ -224,17 +276,22 @@ def security_header_durchgereicht(api: GatewayApi):
                     "nicht benötigt, passSecurityHeaders abschalten."
                 ),
                 evidence=[Evidence(pointer=api.source_path,
-                                   excerpt=f"passSecurityHeaders: true ({ep.uri})")],
+                                   excerpt=f"passSecurityHeaders: true ({ohne_zugangsdaten(ep.uri)})")],
             )
 
 
 # ------------------------------------------------------- Betrieb und Daten
 
+#: ``throttle`` ist der templateKey der Policy „Traffic Optimization“ im offiziellen
+#: IBM-Repo (ibm-wm-transition/webmethods-api-gateway). Die übrigen Schlüssel bleiben
+#: aus Kompatibilität mit älteren Fixtures erhalten.
+TRAFFIC_LIMIT = ("throttle", "throttlingPolicy", "trafficOptimizationPolicy", "requestSizeLimit")
+
+
 @regel
 def fehlende_threat_protection(api: GatewayApi):
     """Ohne Größen- und Mengenbegrenzung ist die API leicht überlastbar."""
-    if any(api.has_action(k) for k in
-           ("throttlingPolicy", "trafficOptimizationPolicy", "requestSizeLimit")):
+    if any(api.has_action(k) for k in TRAFFIC_LIMIT):
         return
     yield _f(
         api,
@@ -253,7 +310,7 @@ def fehlende_threat_protection(api: GatewayApi):
             "Threat-Protection-Konfiguration mit exportieren und prüfen."
         ),
         evidence=[Evidence(pointer=api.source_path,
-                           excerpt="keine throttling-/trafficOptimization-Policy")],
+                           excerpt="keine Traffic-Optimization-Policy (throttle)")],
     )
 
 

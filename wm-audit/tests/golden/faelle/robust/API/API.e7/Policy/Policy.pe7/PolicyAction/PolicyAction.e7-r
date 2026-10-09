@@ -1,0 +1,19 @@
+{
+ "id": "e7-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "http://lit.example/${sys:resource_path}"
+   ]
+  }
+ ],
+ "active": false
+}

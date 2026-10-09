@@ -1,0 +1,19 @@
+{
+ "id": "r1-a",
+ "names": [
+  {
+   "value": "Aktion",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  1,
+  "x",
+  {
+   "templateKey": "protocol",
+   "values": "HTTP"
+  }
+ ],
+ "active": false
+}

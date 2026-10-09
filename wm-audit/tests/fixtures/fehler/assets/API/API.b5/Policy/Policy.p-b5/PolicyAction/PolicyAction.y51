@@ -1,0 +1,19 @@
+{
+ "id": "y51",
+ "names": [
+  {
+   "value": "Enable HTTP / HTTPS",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "https"
+   ]
+  }
+ ],
+ "active": false
+}

@@ -1,0 +1,19 @@
+{
+ "id": "u1-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${Backend}/${sys:resource_path}"
+   ]
+  }
+ ],
+ "active": false
+}

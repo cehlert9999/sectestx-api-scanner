@@ -1,0 +1,6 @@
+{
+ "id": "al-test",
+ "name": "Backend",
+ "type": "simple",
+ "value": "http://test-backend.intern"
+}

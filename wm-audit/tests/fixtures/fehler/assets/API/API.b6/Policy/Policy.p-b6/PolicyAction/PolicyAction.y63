@@ -1,0 +1,19 @@
+{
+ "id": "y63",
+ "names": [
+  {
+   "value": "Traffic Monitoring",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttlingPolicy",
+ "parameters": [
+  {
+   "templateKey": "maxRequests",
+   "values": [
+    "500"
+   ]
+  }
+ ],
+ "active": false
+}

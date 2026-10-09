@@ -1,0 +1,19 @@
+{
+ "id": "e9-r",
+ "names": [
+  {
+   "value": "Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${a${Ziel}}"
+   ]
+  }
+ ],
+ "active": false
+}

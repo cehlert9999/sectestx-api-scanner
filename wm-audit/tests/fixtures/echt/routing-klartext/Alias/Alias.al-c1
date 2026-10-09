@@ -1,0 +1,7 @@
+{
+ "id": "al-c1",
+ "name": "Backend",
+ "type": "simple",
+ "owner": "Administrator",
+ "value": "http://svc-user:GEHEIM-KANARIE-URL@backend.intern:8080"
+}

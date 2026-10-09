@@ -1,0 +1,7 @@
+{
+ "id": "al-c2",
+ "name": "Backend",
+ "type": "simple",
+ "owner": "Administrator",
+ "value": "https://zaehler.example/v1"
+}

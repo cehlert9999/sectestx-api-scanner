@@ -1,0 +1,19 @@
+{
+ "id": "y64",
+ "names": [
+  {
+   "value": "Log Invocation",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "logInvocation",
+ "parameters": [
+  {
+   "templateKey": "storeRequestPayload",
+   "values": [
+    "true"
+   ]
+  }
+ ],
+ "active": false
+}

@@ -1,0 +1,11 @@
+{
+ "apiName": "R5",
+ "apiVersion": 1e-05,
+ "type": "REST",
+ "nativeEndpoint": [
+  {
+   "uri": "https://backend.example",
+   "passSecurityHeaders": false
+  }
+ ]
+}

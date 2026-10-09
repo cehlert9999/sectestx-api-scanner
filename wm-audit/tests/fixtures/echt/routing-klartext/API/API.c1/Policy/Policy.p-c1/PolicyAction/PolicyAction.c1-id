@@ -1,0 +1,59 @@
+{
+ "id": "c1-id",
+ "names": [
+  {
+   "value": "Identify & Authorize",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "logicalConnector",
+   "values": [
+    "AND"
+   ]
+  },
+  {
+   "templateKey": "allowAnonymous",
+   "values": [
+    "false"
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "applicationLookup",
+     "values": [
+      "strict"
+     ]
+    },
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "apiKey"
+     ]
+    }
+   ]
+  },
+  {
+   "templateKey": "IdentificationRule",
+   "parameters": [
+    {
+     "templateKey": "applicationLookup",
+     "values": [
+      "strict"
+     ]
+    },
+    {
+     "templateKey": "identificationType",
+     "values": [
+      "jwtClaims"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": false
+}

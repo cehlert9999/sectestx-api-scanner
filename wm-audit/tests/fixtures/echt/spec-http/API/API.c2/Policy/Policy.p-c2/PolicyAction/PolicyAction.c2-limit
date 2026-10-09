@@ -1,0 +1,19 @@
+{
+ "id": "c2-limit",
+ "names": [
+  {
+   "value": "Traffic Monitoring",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttle",
+ "parameters": [
+  {
+   "templateKey": "maxRequests",
+   "values": [
+    "500"
+   ]
+  }
+ ],
+ "active": false
+}

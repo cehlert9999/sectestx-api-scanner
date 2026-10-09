@@ -1,0 +1,6 @@
+{
+ "id": "z",
+ "name": "Ziel2",
+ "type": "endpoint",
+ "value": "http://endpoint.example"
+}

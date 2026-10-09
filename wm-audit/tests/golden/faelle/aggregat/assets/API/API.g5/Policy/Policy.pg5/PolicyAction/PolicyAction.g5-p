@@ -1,0 +1,19 @@
+{
+ "id": "g5-p",
+ "names": [
+  {
+   "value": "Protocol",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "entryProtocolPolicy",
+ "parameters": [
+  {
+   "templateKey": "protocol",
+   "values": [
+    "https"
+   ]
+  }
+ ],
+ "active": false
+}

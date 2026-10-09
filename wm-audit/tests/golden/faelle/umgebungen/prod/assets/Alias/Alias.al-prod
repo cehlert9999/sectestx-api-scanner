@@ -1,0 +1,6 @@
+{
+ "id": "al-prod",
+ "name": "Backend",
+ "type": "simple",
+ "value": "https://prod-backend.intern"
+}

@@ -1,0 +1,232 @@
+{
+  "apis": [
+    {
+      "id": "",
+      "label": "G1 1.0",
+      "name": "G1",
+      "pfad": "assets/API/API.g1/API.g1",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "G2 1.0",
+      "name": "G2",
+      "pfad": "assets/API/API.g2/API.g2",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "G3 1.0",
+      "name": "G3",
+      "pfad": "assets/API/API.g3/API.g3",
+      "policies": [
+        "evaluatePolicy",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "G4 1.0",
+      "name": "G4",
+      "pfad": "assets/API/API.g4/API.g4",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    },
+    {
+      "id": "",
+      "label": "G5 1.0",
+      "name": "G5",
+      "pfad": "assets/API/API.g5/API.g5",
+      "policies": [
+        "evaluatePolicy",
+        "throttle",
+        "entryProtocolPolicy"
+      ],
+      "version": "1.0"
+    }
+  ],
+  "befunde": [
+    {
+      "affected": [
+        "G1 1.0",
+        "G2 1.0",
+        "G3 1.0"
+      ],
+      "aggregate_count": 3,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.http_allowed",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [],
+      "id": "4c0a3eab2a22",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Betrifft 3 von 5 APIs. Ein Merkmal, das nahezu überall auftritt, beschreibt eine Gewohnheit und wird deshalb gesammelt gemeldet statt je Endpunkt einzeln. Die Entry-Protocol-Policy lässt HTTP zu. Zugangsdaten und Nutzdaten sind auf dem Weg zum Gateway mitlesbar.",
+      "remediation": "Nur HTTPS zulassen und HTTP an der Kante umleiten oder abweisen.",
+      "scope": "dokument",
+      "severity": "high",
+      "subject": "3 von 5 APIs",
+      "title": "Gateway akzeptiert unverschlüsseltes HTTP (durchgängig)"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: http://g1.example",
+          "note": "",
+          "pointer": "assets/API/API.g1/API.g1"
+        }
+      ],
+      "id": "9e9e8954afe0",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://g1.example weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "G1 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [],
+      "aggregate_count": null,
+      "bewertet": true,
+      "cap": null,
+      "check_id": "gw.plaintext_backend",
+      "confidence": "belegt",
+      "dimension": "design",
+      "evidence": [
+        {
+          "excerpt": "nativeEndpoint: http://g2.example",
+          "note": "",
+          "pointer": "assets/API/API.g2/API.g2"
+        }
+      ],
+      "id": "602b32f2ac01",
+      "method": null,
+      "owasp": "API8",
+      "reason": "Das Gateway leitet an http://g2.example weiter. Die Verbindung endet damit am Gateway; im internen Netz laufen die Daten im Klartext.",
+      "remediation": "Das Backend über HTTPS ansprechen.",
+      "scope": "api",
+      "severity": "high",
+      "subject": "G2 1.0",
+      "title": "Weiterleitung an ein Klartext-Backend"
+    },
+    {
+      "affected": [
+        "G1 1.0",
+        "G2 1.0",
+        "G3 1.0"
+      ],
+      "aggregate_count": 3,
+      "bewertet": false,
+      "cap": null,
+      "check_id": "gw.no_traffic_limit",
+      "confidence": "wahrscheinlich",
+      "dimension": "design",
+      "evidence": [],
+      "id": "234882d7796a",
+      "method": null,
+      "owasp": "API4",
+      "reason": "Betrifft 3 von 5 APIs. Ein Merkmal, das nahezu überall auftritt, beschreibt eine Gewohnheit und wird deshalb gesammelt gemeldet statt je Endpunkt einzeln. Auf API-Ebene ist keine Traffic-Begrenzung konfiguriert. Eine global gesetzte Threat-Protection kann greifen — sie ist in diesem Export jedoch nicht enthalten und daher hier nicht nachweisbar.",
+      "remediation": "Eine Traffic-Monitoring-Policy je API setzen oder die globale Threat-Protection-Konfiguration mit exportieren und prüfen.",
+      "scope": "dokument",
+      "severity": "info",
+      "subject": "3 von 5 APIs",
+      "title": "Keine Begrenzung von Anfragemenge oder Nachrichtengröße (durchgängig)"
+    }
+  ],
+  "format": "wm-audit-bericht/1",
+  "laufzeit_luecken": [
+    {
+      "key": "key_verification",
+      "owasp": "API2",
+      "title": "Wird ein erfundener API-Key tatsächlich abgewiesen?",
+      "why": "Ob die Policy im Betrieb greift, zeigt erst eine Anfrage."
+    },
+    {
+      "key": "jwt_signature",
+      "owasp": "API2",
+      "title": "Wird die JWT-Signatur wirklich geprüft?",
+      "why": "Die Konfiguration nennt das Verfahren, nicht dessen Umsetzung."
+    },
+    {
+      "key": "object_authorization",
+      "owasp": "API1",
+      "title": "Erreicht ein Aufrufer fremde Objekte?",
+      "why": "Objektbezogene Berechtigung liegt im Backend und braucht zwei Identitäten."
+    },
+    {
+      "key": "role_enforcement",
+      "owasp": "API5",
+      "title": "Wird die Rollenprüfung durchgesetzt?",
+      "why": "Das Gateway identifiziert; autorisieren muss das Backend."
+    },
+    {
+      "key": "trust_header",
+      "owasp": "API2",
+      "title": "Lässt sich ein Trust-Header fälschen?",
+      "why": "Hängt davon ab, wie das Backend eingehende Header behandelt."
+    },
+    {
+      "key": "global_threat_protection",
+      "owasp": "API4",
+      "title": "Greift eine globale Threat-Protection?",
+      "why": "Globale Konfiguration liegt außerhalb des API-Exports."
+    },
+    {
+      "key": "security_headers",
+      "owasp": "API8",
+      "title": "Werden Security-Header in Antworten gesetzt?",
+      "why": "Antwort-Header stehen in keiner Konfigurationsdatei."
+    },
+    {
+      "key": "cors",
+      "owasp": "API8",
+      "title": "Wie verhält sich CORS tatsächlich?",
+      "why": "Erst eine Preflight-Anfrage zeigt die wirksame Regel."
+    }
+  ],
+  "quelle": {
+    "art": "verzeichnis",
+    "name": "aggregat",
+    "sha256": null
+  },
+  "uebersprungen": [],
+  "werkzeug": "wm-audit 0.2.0",
+  "zusammenfassung": {
+    "apis_eindeutig": 5,
+    "apis_gelesen": 5,
+    "befunde": 4,
+    "belegt": 3,
+    "gesperrt": 0,
+    "schwere": {
+      "critical": 0,
+      "high": 3,
+      "info": 1,
+      "low": 0,
+      "medium": 0
+    },
+    "uebersprungen": 0
+  }
+}

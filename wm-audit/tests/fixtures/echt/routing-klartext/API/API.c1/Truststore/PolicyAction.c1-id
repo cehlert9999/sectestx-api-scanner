@@ -1,0 +1,19 @@
+{
+ "id": "c1-id",
+ "names": [
+  {
+   "value": "GEHEIM-KANARIE-TRUSTSTORE",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "evaluatePolicy",
+ "parameters": [
+  {
+   "templateKey": "allowAnonymous",
+   "values": [
+    "true"
+   ]
+  }
+ ],
+ "active": false
+}

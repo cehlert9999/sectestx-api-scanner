@@ -1,0 +1,25 @@
+{
+ "id": "c2-route",
+ "names": [
+  {
+   "value": "Straight Through Routing",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "straightThroughRouting",
+ "parameters": [
+  {
+   "templateKey": "endpointUri",
+   "values": [
+    "${Backend}/${sys:resource_path}"
+   ]
+  },
+  {
+   "templateKey": "method",
+   "values": [
+    "CUSTOM"
+   ]
+  }
+ ],
+ "active": false
+}

@@ -68,6 +68,31 @@ def test_scan_multipart_upload(client):
     assert body["summary"]["counts"]["belegt"] >= 5
 
 
+def test_summary_grades_tragen_herleitung(client):
+    """Die Herleitung (uncapped + finding_count) je Dimension wird geliefert,
+    damit das UI erklären kann, WIE die Note zustande kam — inkl. Deckel-Effekt."""
+    r = client.post("/api/v1/scan", files={"file": ("demo.json", DEMO.encode(), "application/json")})
+    body = r.json()
+    grades = body["summary"]["grades"]
+    for dim in ("design", "hygiene"):
+        assert set(grades[dim]) == {"letter", "uncapped", "finding_count"}
+        assert grades[dim]["letter"] in {"A", "B", "C", "D", "F"}
+        assert grades[dim]["uncapped"] in {"A", "B", "C", "D", "F"}
+        assert isinstance(grades[dim]["finding_count"], int)
+    # Endnote ist nie besser als die rechnerische (Deckel können nur verschärfen).
+    reihenfolge = ["A", "B", "C", "D", "F"]
+    for dim in ("design", "hygiene"):
+        assert reihenfolge.index(grades[dim]["letter"]) >= reihenfolge.index(grades[dim]["uncapped"])
+    assert grades["design"]["letter"] == "F"
+    assert grades["design"]["finding_count"] >= 1
+
+
+def test_saubere_spec_note_a_ohne_deckel(client):
+    r = client.post("/api/v1/scan", json={"spec": CLEAN, "filename": "clean.yaml"})
+    grades = r.json()["summary"]["grades"]
+    assert grades["design"]["letter"] == grades["design"]["uncapped"] == "A"
+
+
 def test_scan_spec_direkt_als_json_body(client):
     r = client.post("/api/v1/scan", content=DEMO.encode(), headers={"content-type": "application/json"})
     assert r.status_code == 200, r.text

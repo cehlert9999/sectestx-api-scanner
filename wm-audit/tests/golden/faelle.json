@@ -1,0 +1,72 @@
+[
+ {
+  "name": "fixtures-verzeichnis",
+  "pfad": "../fixtures"
+ },
+ {
+  "name": "fixtures-zip",
+  "pfad": "faelle/fixtures.zip"
+ },
+ {
+  "name": "umgebungen-verzeichnis",
+  "pfad": "faelle/umgebungen"
+ },
+ {
+  "name": "umgebungen-zip",
+  "pfad": "faelle/umgebungen.zip"
+ },
+ {
+  "name": "robust-verzeichnis",
+  "pfad": "faelle/robust"
+ },
+ {
+  "name": "robust-zip",
+  "pfad": "faelle/robust.zip"
+ },
+ {
+  "name": "aggregat",
+  "pfad": "faelle/aggregat"
+ },
+ {
+  "name": "leer",
+  "pfad": "faelle/leer"
+ },
+ {
+  "name": "fail-on-critical",
+  "pfad": "../fixtures",
+  "argumente": [
+   "--fail-on",
+   "critical"
+  ],
+  "exit": 1,
+  "nur_exit": true
+ },
+ {
+  "name": "fail-on-ohne-treffer",
+  "pfad": "faelle/aggregat",
+  "argumente": [
+   "--fail-on",
+   "critical"
+  ],
+  "exit": 0,
+  "nur_exit": true
+ },
+ {
+  "name": "doppelt-zip",
+  "pfad": "faelle/doppelt.zip",
+  "exit": 2,
+  "nur_exit": true
+ },
+ {
+  "name": "kein-zip",
+  "pfad": "faelle/kein-zip.txt",
+  "exit": 2,
+  "nur_exit": true
+ },
+ {
+  "name": "fehlt",
+  "pfad": "faelle/gibt-es-nicht",
+  "exit": 2,
+  "nur_exit": true
+ }
+]

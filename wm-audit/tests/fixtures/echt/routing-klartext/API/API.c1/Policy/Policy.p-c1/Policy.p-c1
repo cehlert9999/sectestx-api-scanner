@@ -1,0 +1,53 @@
+{
+ "id": "p-c1",
+ "names": [
+  {
+   "value": "Default Policy p-c1",
+   "locale": "English"
+  }
+ ],
+ "scope": {
+  "scopeConditions": []
+ },
+ "policyEnforcements": [
+  {
+   "stageKey": "transport",
+   "enforcements": [
+    {
+     "enforcementObjectId": "c1-proto",
+     "order": "0"
+    }
+   ]
+  },
+  {
+   "stageKey": "IAM",
+   "enforcements": [
+    {
+     "enforcementObjectId": "c1-id",
+     "order": "0"
+    }
+   ]
+  },
+  {
+   "stageKey": "routing",
+   "enforcements": [
+    {
+     "enforcementObjectId": "c1-route",
+     "order": "0"
+    }
+   ]
+  },
+  {
+   "stageKey": "trafficMonitoring",
+   "enforcements": [
+    {
+     "enforcementObjectId": "c1-limit",
+     "order": "0"
+    }
+   ]
+  }
+ ],
+ "policyScope": "SERVICE",
+ "global": false,
+ "active": false
+}

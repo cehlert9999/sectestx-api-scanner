@@ -1,0 +1,11 @@
+{
+ "apiName": "R1",
+ "apiVersion": 2,
+ "isActive": "FALSE",
+ "apiGroups": "x",
+ "nativeEndpoint": {
+  "uri": "https://r1.example",
+  "passSecurityHeaders": "False",
+  "connectionTimeoutDuration": "12"
+ }
+}

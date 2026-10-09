@@ -1,0 +1,41 @@
+{
+ "id": "c2",
+ "apiName": "SpecHttpAPI",
+ "apiVersion": "1.0",
+ "type": "REST",
+ "isActive": true,
+ "maturityState": "Beta",
+ "nativeEndpoint": [
+  {
+   "uri": "https://zaehler.example/v1",
+   "passSecurityHeaders": false,
+   "alias": false
+  },
+  {
+   "uri": "http://zaehler.example/v1",
+   "passSecurityHeaders": false,
+   "alias": false
+  }
+ ],
+ "policies": [
+  "p-c2"
+ ],
+ "apiDefinition": {
+  "openapi": "3.0.1",
+  "info": {
+   "title": "SpecHttpAPI",
+   "version": "1.0"
+  },
+  "paths": {
+   "/zaehler/{id}": {
+    "get": {
+     "responses": {
+      "200": {
+       "description": "ok"
+      }
+     }
+    }
+   }
+  }
+ }
+}

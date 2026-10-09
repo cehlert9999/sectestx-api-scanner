@@ -1,0 +1,22 @@
+wm-audit 0.2.0 · aggregat (verzeichnis)
+5 APIs gelesen (5 eindeutig) · 0 Dateien übersprungen · 0 gesperrte Einträge nicht geöffnet
+
+Befunde: 4 (3 belegt)
+  HIGH      belegt          gw.http_allowed               3 von 5 APIs
+            Gateway akzeptiert unverschlüsseltes HTTP (durchgängig)
+  HIGH      belegt          gw.plaintext_backend          G1 1.0
+            Weiterleitung an ein Klartext-Backend
+  HIGH      belegt          gw.plaintext_backend          G2 1.0
+            Weiterleitung an ein Klartext-Backend
+  INFO      wahrscheinlich  gw.no_traffic_limit           3 von 5 APIs
+            Keine Begrenzung von Anfragemenge oder Nachrichtengröße (durchgängig)
+
+Statisch nicht prüfbar (8):
+  API2  Wird ein erfundener API-Key tatsächlich abgewiesen?
+  API2  Wird die JWT-Signatur wirklich geprüft?
+  API1  Erreicht ein Aufrufer fremde Objekte?
+  API5  Wird die Rollenprüfung durchgesetzt?
+  API2  Lässt sich ein Trust-Header fälschen?
+  API4  Greift eine globale Threat-Protection?
+  API8  Werden Security-Header in Antworten gesetzt?
+  API8  Wie verhält sich CORS tatsächlich?

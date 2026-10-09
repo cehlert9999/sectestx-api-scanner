@@ -1,6 +1,6 @@
 [project]
 name = "wm-audit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Statische Security-Analyse für webMethods-API-Gateway-Exporte — liest die tatsächliche Konfiguration, nicht nur die Dokumentation"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,12 +14,18 @@ dependencies = [
     "pydantic>=2.7",
 ]
 
+[project.scripts]
+wm-audit = "wm_audit.__main__:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.3", "pytest-cov>=5.0", "ruff>=0.6"]
 
 [build-system]
 requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+wm_audit = ["bericht.html"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -36,3 +42,7 @@ ignore = ["E501"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--strict-markers"]
+markers = [
+    "rust: Vergleich mit der Rust-Portierung (braucht code/wm-audit-rs/target/release/wm-audit)",
+    "echt: Lauf gegen öffentliche Software-AG-Exporte (braucht WM_DEVOPS_REPO)",
+]

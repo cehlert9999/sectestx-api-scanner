@@ -1,0 +1,14 @@
+{
+ "id": "pn1",
+ "policyEnforcements": [
+  {
+   "stageKey": "alle",
+   "enforcements": [
+    {
+     "enforcementObjectId": "n1-a",
+     "order": "0"
+    }
+   ]
+  }
+ ]
+}

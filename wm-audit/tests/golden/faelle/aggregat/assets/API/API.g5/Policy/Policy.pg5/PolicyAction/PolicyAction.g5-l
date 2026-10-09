@@ -1,0 +1,36 @@
+{
+ "id": "g5-l",
+ "names": [
+  {
+   "value": "Traffic Optimization",
+   "locale": "en"
+  }
+ ],
+ "templateKey": "throttle",
+ "parameters": [
+  {
+   "templateKey": "throttleRule",
+   "parameters": [
+    {
+     "templateKey": "throttleRuleName",
+     "values": [
+      "requestCount"
+     ]
+    },
+    {
+     "templateKey": "monitorRuleOperator",
+     "values": [
+      "GT"
+     ]
+    },
+    {
+     "templateKey": "value",
+     "values": [
+      "100"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": false
+}
